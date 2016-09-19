@@ -59,6 +59,11 @@ a:hover{
   float: right;
 }
 
+.electionBox {
+  margin: 10px;
+  border: 1px solid black;
+}
+
 .electionLabel {
   text-align: center;
   font-size: 32px;
