@@ -18,7 +18,7 @@ angular.module('tutorialWebApp.signup', ['ngRoute','firebase'])
     databaseURL: "https://davincinode-5e249.firebaseio.com",
     storageBucket: "",
     messagingSenderId: "517875679155"
-    };
+  };
     firebase.initializeApp(config);    
 
     $scope.signUp = function(){
@@ -29,11 +29,11 @@ angular.module('tutorialWebApp.signup', ['ngRoute','firebase'])
         if(!$scope.regForm.$invalid){
             console.log("Valid form Submission");
             
-            if(firebase.database().ref('users/' +username) != null){
-                console.log("username already exists");
-                $scope.usernameTaken = false;
-            }
-            else{
+            // if(firebase.database().ref('users/' +username) != null){
+                // console.log("username already exists");
+                // $scope.usernameTaken = false;
+            // }
+           // else{
                 firebase.auth().createUserWithEmailAndPassword(txtEmail, txtPassword).catch(function(error){
                     var errorCode = error.code;
                     var errorMessage = error.message;
@@ -45,10 +45,10 @@ angular.module('tutorialWebApp.signup', ['ngRoute','firebase'])
                     access: "user"
                 });
             }
-        }
-        else{
-            console.log("Invalid form submission");
-        }
+        
+        // else{
+            // console.log("Invalid form submission");
+        // }
         
         $scope.user.username = '';
         $scope.user.email = '';
