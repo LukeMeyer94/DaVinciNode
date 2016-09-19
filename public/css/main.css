@@ -45,10 +45,15 @@ a:hover{
     color:#3E3C54;
 }
 
+/* Voting page CSS */
 .candidate {
   display: inline-block;
   max-width: 40%;
   margin: 20px;
+}
+
+.candidate-pic {
+  border-radius: 25px;
 }
 
 .candidate1 {
