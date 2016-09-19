@@ -1,5 +1,17 @@
 <div class="container">
         <form class="form-vote" name="regForm">
+          <!-- remove the below mock data once we get dynamic data -->
+          <div class="electionBox">
+            <div class="electionLabel">United States Primary Election</div>
+            <div class="candidate candidate1">
+              <img ng-src="/imgs/Trump.jpg" class="img-responsive candidate-pic">
+              <input type="radio" name="candidate" value="Trump">Trump</input>
+            </div>
+            <div class="candidate candidate2">
+              <img ng-src="/imgs/Clinton.jpg" class="img-responsive candidate-pic">
+              <input type="radio" name="candidate" value="Clinton">Clinton</input>
+            </div>
+          </div>
           <!-- TODO: add list of elections for specific user -->
           <button type="button" id="Votebutton" class="btn btn-lg btn-primary btn-block">Submit Vote</button>
         </form>
