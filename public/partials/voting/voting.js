@@ -10,8 +10,8 @@ angular.module('tutorialWebApp.signup', ['ngRoute','firebase'])
   });
 }])
 
-.controller('SignUpCtrl', ['$scope', '$firebaseAuth', function ($scope, $firebaseAuth) {
-    console.log("SignUp Controller reporting for duty.");
+.controller('VotingCtrl', ['$scope', '$firebaseAuth', function ($scope, $firebaseAuth) {
+    console.log("Voting Controller reporting for duty.");
     var config = {
     apiKey: "AIzaSyCD7DbVChVXmOcz16guCkBOWQRY5Qjnv6E",
     authDomain: "davincinode-5e249.firebaseapp.com",
@@ -19,40 +19,6 @@ angular.module('tutorialWebApp.signup', ['ngRoute','firebase'])
     storageBucket: "",
     messagingSenderId: "517875679155"
     };
-    firebase.initializeApp(config);    
+    firebase.initializeApp(config);
 
-    $scope.signUp = function(){
-        var txtEmail = $scope.user.email;
-        var txtPassword = $scope.user.password;
-        var username = $scope.user.username;
-        
-        if(!$scope.regForm.$invalid){
-            console.log("Valid form Submission");
-            
-            if(firebase.database().ref('users/' +username) != null){
-                console.log("username already exists");
-                $scope.usernameTaken = false;
-            }
-            else{
-                firebase.auth().createUserWithEmailAndPassword(txtEmail, txtPassword).catch(function(error){
-                    var errorCode = error.code;
-                    var errorMessage = error.message;
-                    console.log("Error: " + errorMessage);
-                });
-                firebase.database().ref('users/' + username).set({
-                    email: txtEmail,
-                    password: txtPassword,
-                    access: "user"
-                });
-            }
-        }
-        else{
-            console.log("Invalid form submission");
-        }
-        
-        $scope.user.username = '';
-        $scope.user.email = '';
-        $scope.user.password = '';
-    };
 }]);
-
