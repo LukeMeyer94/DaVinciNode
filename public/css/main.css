@@ -47,7 +47,7 @@ a:hover{
 
 .candidate {
   display: inline-block;
-  width: 30%;
+  max-width: 40%;
   margin: 20px;
 }
 
