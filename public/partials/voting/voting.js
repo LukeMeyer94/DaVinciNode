@@ -4,9 +4,9 @@
 angular.module('tutorialWebApp.signup', ['ngRoute','firebase'])
 
 .config(['$routeProvider', function($routeProvider) {
-  $routeProvider.when('/signup', {
-    templateUrl: 'partials/signup/signup.html',
-    controller: 'SignUpCtrl'
+  $routeProvider.when('/voting', {
+    templateUrl: 'partials/voting/voting.html',
+    controller: 'VotingCtrl'
   });
 }])
 
