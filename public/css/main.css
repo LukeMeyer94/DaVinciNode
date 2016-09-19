@@ -44,3 +44,8 @@ a{
 a:hover{
     color:#3E3C54;
 }
+
+.black-button{
+    background-color: #000000;
+    text-color: #ffffff;
+}
