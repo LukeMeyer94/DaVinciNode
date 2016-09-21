@@ -1,11 +1,11 @@
 'use strict';
 
 
-angular.module('tutorialWebApp.voting', ['ngRoute','firebase'])
+angular.module('tutorialWebApp.signup', ['ngRoute','firebase'])
 
 .config(['$routeProvider', function($routeProvider) {
-  $routeProvider.when('/voting', {
-    templateUrl: 'partials/voting/voting.html',
+  $routeProvider.when('/vote_confirmed', {
+    templateUrl: 'partials/vote_confirmed/vote_confirmed.html',
     controller: 'VotingCtrl'
   });
 }])

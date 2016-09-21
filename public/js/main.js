@@ -4,7 +4,8 @@
 var app = angular.module('tutorialWebApp', [
   'ngRoute',
   'tutorialWebApp.signup',
-  'tutorialWebApp.signin']
+  'tutorialWebApp.signin',
+  'tutorialWebApp.voting']
 );
 
 /**
