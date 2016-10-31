@@ -3,6 +3,9 @@
  */
 var app = angular.module('tutorialWebApp', [
   'ngRoute',
+  'ui.bootstrap',
+  'ui.mask',
+  'angular-md5',
   'tutorialWebApp.signup',
   'tutorialWebApp.signin',
   'tutorialWebApp.voting']

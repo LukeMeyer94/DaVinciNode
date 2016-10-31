@@ -1,59 +1,100 @@
 var signin = angular.module('tutorialWebApp.signin', []);
 
-signin.controller('SignInCtrl', ['$scope', '$firebaseAuth', function ($scope, $firebaseAuth) {
+signin.controller('SignInCtrl', ['$scope','md5', '$firebaseAuth','$route','$location', '$rootScope', '$window', 
+    function ($scope,md5, $firebaseAuth, $route, $location, $rootScope, $window) {
     console.log("SignIn Controller reporting for duty.");
-    // var config = {
-    // apiKey: "AIzaSyCD7DbVChVXmOcz16guCkBOWQRY5Qjnv6E",
-    // authDomain: "davincinode-5e249.firebaseapp.com",
-    // databaseURL: "https://davincinode-5e249.firebaseio.com",
-    // storageBucket: "",
-    // messagingSenderId: "517875679155"
-  // };
-    // firebase.initializeApp(config);    
-
-    function checkIfUserExists(username) {
-        var ref = firebase.database().ref("users/" + username);
-        ref.once("value")
-            .then(function(snapshot){
-                var childEmail = snapshot.child("email").val();
-                
-                if(childEmail != null){
-                    return true;
-                } else{
-                    return false;
-                }
-        });
+    
+    if(firebase.auth().currentUser == null){
+        $scope.userSignedIn = false;
+    } else{
+        $scope.userSignedIn = true;
+    }
+    
+    firebase.auth().onAuthStateChanged(function(user){
+        if(firebase.auth().currentUser){
+            $scope.userSignedIn = true;
+            console.log("user signed in: " + firebase.auth().currentUser);
+            console.log($scope.userSignedIn);
+            $scope.$apply();
+        } else{
+            $scope.userSignedIn = false;
+            console.log(firebase.auth().currentUser);
+            $scope.$apply();
+        }
+    });
+    
+    $scope.goToProfile = function(){
+        if(firebase.auth().currentUser != null){
+            var email = firebase.auth().currentUser.email;
+            console.log(email);
+            
+            var hash = md5.createHash(email);
+            
+            
+            var ref = firebase.database().ref('voters/' + hash);
+            ref.once("value")
+                .then(function(snapshot){
+                    if(snapshot.exists()){
+                        console.log("would go to profile here if that page existed.");
+                    }
+                });
+        }
+    }
+    
+    $scope.signOut = function(){
+        firebase.auth().signOut();
+        console.log("Signout button clicked");
+        $route.reload();
+       // $scope.$apply();
     };
     
     $scope.signIn = function(){
        console.log("login button clicked");
        
-       var username = $scope.user.username;
-       var password = $scope.user.password;
-       console.log(username);
-       var exists = checkIfUserExists(username);
-       console.log(exists);
-       console.log("Valid Form Submission");
+       $scope.user.invalidEmail = false;
+       $scope.user.userDoesNotExist = false;
+       $scope.user.incorrectPassword = false;
        
-       var ref = firebase.database().ref("users/" + username);
-       ref.once("value")
-        .then(function(snapshot){
-            var childEmail = snapshot.child("email").val();
-            console.log(childEmail);
-            if(childEmail != null){
-                console.log("User exists");
-                firebase.auth().signInWithEmailAndPassword(childEmail, password).catch(function(error){
-                    var errorCode = error.code;
-                    var errorMessage = error.message;
-                    console.log("Error: " + errorMessage);
-                });
-            } else{
-                console.log("User does not exist");
+        if (firebase.auth().currentUser) {
+            console.log(firebase.auth().currentUser.email);
+            firebase.auth().signOut();
+            console.log(firebase.auth().currentUser.email);
+            console.log("have to sign out first.");
+        } else{
+            var email = $scope.user.email;
+            var password = $scope.user.password;
+       
+            firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error){
+               console.log(error.code);
+               var errorCode = error.code;
+               
+               if(errorCode === 'auth/invalid-email'){
+                    $scope.user.invalidEmail = true;
+               }
+               if(errorCode === 'auth/user-not-found' || errorCode === 'auth/user-disabled'){
+                   $scope.user.userDoesNotExist = true;
+               }
+               if(errorCode === 'auth/wrong-password'){
+                   $scope.user.incorrectPassword = true;
+               }else{
+                   console.log("random error?");
+               }
+               
+                
+            });
+           
+            //console.log(firebase.auth().currentUser.email);
+            if(!$scope.regForm.$invalid){
+                $scope.user.email= '';
+                $scope.user.password = '';
+                $('#myModal').modal('hide');  
+            }else{
+                $scope.user.email= '';
+                $scope.user.password = '';
             }
-        });
-       
-       $scope.username= '';
-       $scope.password = '';
+        }
+        //$scope.$apply();
+        $route.reload();
     };
 }]);
 
