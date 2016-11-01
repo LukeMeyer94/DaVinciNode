@@ -8,7 +8,9 @@ var app = angular.module('tutorialWebApp', [
   'angular-md5',
   'tutorialWebApp.signup',
   'tutorialWebApp.signin',
-  'tutorialWebApp.voting']
+  'tutorialWebApp.voting',
+  'tutorialWebApp.createAdmin',
+  'tutorialWebApp.createManager']
 );
 
 /**

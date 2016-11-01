@@ -60,6 +60,10 @@
             <ul class= "nav navbar-nav navbar-right">
                 <li><a ng-show="userSignedIn" ng-click="goToProfile();">My Profile</a>
                 </li>
+                <li><a ng-show="isAdmin" href="#/createAdmin">Create new Admin</a>
+                </li>
+                <li><a ng-show="isAdmin" href="#/createManager">Create new Manager</a>
+                </li>
                 <li><a ng-show="!userSignedIn" href="#/signup">Sign Up</a>
                 </li>
                 <li><a ng-show ="!userSignedIn" data-toggle="modal" data-target="#myModal">Sign In</a>
@@ -143,6 +147,8 @@
     <script src="partials/signup/signup.js"></script>
     <script src="partials/signin/signin.js"></script>
     <script src="partials/voting/voting.js"></script>
+    <script src="partials/signup/createAdmin.js"></script>
+    <script src="partials/signup/createManager.js"></script>
     <script src="angular-ui-mask/dist/mask.js"></script>
 </body>
 </html>

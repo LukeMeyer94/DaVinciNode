@@ -3,11 +3,20 @@ var signin = angular.module('tutorialWebApp.signin', []);
 signin.controller('SignInCtrl', ['$scope','md5', '$firebaseAuth','$route','$location', '$rootScope', '$window',
     function ($scope,md5, $firebaseAuth, $route, $location, $rootScope, $window) {
     console.log("SignIn Controller reporting for duty.");
-
+    $scope.isAdmin = false;
+    
     if(firebase.auth().currentUser == null){
         $scope.userSignedIn = false;
     } else{
         $scope.userSignedIn = true;
+        var hash = md5.createHash(firebase.auth().currentUser.email);
+        console.log(firebase.auth().currentUser.email);
+        var ref = firebase.database().ref('admins/' + hash);
+        ref.once("value").then(function(snapshot){
+            if(snapshot.hasChild('email')){
+                $scope.isAdmin = true;
+            }
+        });
     }
 
     firebase.auth().onAuthStateChanged(function(user){
@@ -15,10 +24,22 @@ signin.controller('SignInCtrl', ['$scope','md5', '$firebaseAuth','$route','$loca
             $scope.userSignedIn = true;
             console.log("user signed in: " + firebase.auth().currentUser);
             console.log($scope.userSignedIn);
+            var hash = md5.createHash(firebase.auth().currentUser.email);
+            console.log(firebase.auth().currentUser.email);
+            var ref = firebase.database().ref('admins/' + hash);
+            ref.once("value").then(function(snapshot){
+                console.log(snapshot.val());
+                if(snapshot.exists()){
+                    console.log("isadmin");
+                    $scope.isAdmin = true;
+                    $scope.$apply();
+                }
+            });
             $scope.$apply();
-        } else{
+        }else{
             $scope.userSignedIn = false;
             console.log(firebase.auth().currentUser);
+            $scope.isAdmin = false;
             $scope.$apply();
         }
     });
