@@ -13,11 +13,7 @@ angular.module('tutorialWebApp.createAdmin', ['ngRoute','firebase'])
 .controller('createAdminCtrl', ['$scope','md5', '$firebaseAuth','$route','$location', '$rootScope', '$window', 
     function ($scope,md5, $firebaseAuth, $route, $location, $rootScope, $window) {
     console.log("createAdmin Controller reporting for duty.");
-    var email = $scope.user.email;
-    var email2= $scope.user.email2;
-    
-    var password = $scope.user.password;
-    var passwrod2= $scope.user.password2;
+  
     
     function registerUser(email, password){
         console.log("Register User function");
@@ -57,7 +53,12 @@ angular.module('tutorialWebApp.createAdmin', ['ngRoute','firebase'])
     }
 
     $scope.signUp = function(){
+
+        var email = $scope.user.email;
+        var email2= $scope.user.email2;
         
+        var password = $scope.user.password;
+        var passwrod2= $scope.user.password2;    
         var registered = registerUser(email, password);
         
         if(registered){

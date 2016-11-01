@@ -12,12 +12,7 @@ angular.module('tutorialWebApp.createManager', ['ngRoute','firebase'])
 .controller('createManagerCtrl', ['$scope','md5', '$firebaseAuth','$route','$location', '$rootScope', '$window', 
     function ($scope,md5, $firebaseAuth, $route, $location, $rootScope, $window) {
     console.log("createManager Controller reporting for duty.");
-    
-        var email = $scope.user.email;
-    var email2= $scope.user.email2;
-    
-    var password = $scope.user.password;
-    var passwrod2= $scope.user.password2;
+
     
     function registerUser(email, password){
         console.log("Register User function");
@@ -36,7 +31,7 @@ angular.module('tutorialWebApp.createManager', ['ngRoute','firebase'])
                 .then(function(){
                          console.log("successfully signed in new user");
                             var hash = md5.createHash(email);
-                            firebase.database().ref('admins/' + hash).set({
+                            firebase.database().ref('managers/' + hash).set({
                                 email: email
                             }).catch(function(error){
                                  var errorcode = error.code;
@@ -57,7 +52,11 @@ angular.module('tutorialWebApp.createManager', ['ngRoute','firebase'])
     }
 
     $scope.signUp = function(){
+        var email = $scope.user.email;
+        var email2= $scope.user.email2;
         
+        var password = $scope.user.password;
+        var passwrod2= $scope.user.password2;
         var registered = registerUser(email, password);
         
         if(registered){
