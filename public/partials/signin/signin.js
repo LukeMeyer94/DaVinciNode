@@ -1,15 +1,15 @@
 var signin = angular.module('tutorialWebApp.signin', []);
 
-signin.controller('SignInCtrl', ['$scope','md5', '$firebaseAuth','$route','$location', '$rootScope', '$window', 
+signin.controller('SignInCtrl', ['$scope','md5', '$firebaseAuth','$route','$location', '$rootScope', '$window',
     function ($scope,md5, $firebaseAuth, $route, $location, $rootScope, $window) {
     console.log("SignIn Controller reporting for duty.");
-    
+
     if(firebase.auth().currentUser == null){
         $scope.userSignedIn = false;
     } else{
         $scope.userSignedIn = true;
     }
-    
+
     firebase.auth().onAuthStateChanged(function(user){
         if(firebase.auth().currentUser){
             $scope.userSignedIn = true;
@@ -22,15 +22,15 @@ signin.controller('SignInCtrl', ['$scope','md5', '$firebaseAuth','$route','$loca
             $scope.$apply();
         }
     });
-    
+
     $scope.goToProfile = function(){
         if(firebase.auth().currentUser != null){
             var email = firebase.auth().currentUser.email;
             console.log(email);
-            
+
             var hash = md5.createHash(email);
-            
-            
+
+
             var ref = firebase.database().ref('voters/' + hash);
             ref.once("value")
                 .then(function(snapshot){
@@ -40,21 +40,21 @@ signin.controller('SignInCtrl', ['$scope','md5', '$firebaseAuth','$route','$loca
                 });
         }
     }
-    
+
     $scope.signOut = function(){
         firebase.auth().signOut();
         console.log("Signout button clicked");
         $route.reload();
        // $scope.$apply();
     };
-    
+
     $scope.signIn = function(){
        console.log("login button clicked");
-       
+
        $scope.user.invalidEmail = false;
        $scope.user.userDoesNotExist = false;
        $scope.user.incorrectPassword = false;
-       
+
         if (firebase.auth().currentUser) {
             console.log(firebase.auth().currentUser.email);
             firebase.auth().signOut();
@@ -63,11 +63,11 @@ signin.controller('SignInCtrl', ['$scope','md5', '$firebaseAuth','$route','$loca
         } else{
             var email = $scope.user.email;
             var password = $scope.user.password;
-       
+
             firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error){
                console.log(error.code);
                var errorCode = error.code;
-               
+
                if(errorCode === 'auth/invalid-email'){
                     $scope.user.invalidEmail = true;
                }
@@ -79,15 +79,15 @@ signin.controller('SignInCtrl', ['$scope','md5', '$firebaseAuth','$route','$loca
                }else{
                    console.log("random error?");
                }
-               
-                
+
+
             });
-           
+
             //console.log(firebase.auth().currentUser.email);
             if(!$scope.regForm.$invalid){
                 $scope.user.email= '';
                 $scope.user.password = '';
-                $('#myModal').modal('hide');  
+                $('#myModal').modal('hide');
             }else{
                 $scope.user.email= '';
                 $scope.user.password = '';
@@ -97,4 +97,3 @@ signin.controller('SignInCtrl', ['$scope','md5', '$firebaseAuth','$route','$loca
         $route.reload();
     };
 }]);
-
