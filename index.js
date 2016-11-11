@@ -14,7 +14,7 @@ app.get('/', function(req, res){
 io.on('connection', function(socket){
     console.log("connected.");
 });
-
-server.listen(3000, function(){
-  console.log('listening on *:3000');
+//changed from 3000 so cloud9 works
+server.listen(process.env.PORT || 3000, function(){
+  console.log('listening on '+(process.env.PORT || 3000));
 });
