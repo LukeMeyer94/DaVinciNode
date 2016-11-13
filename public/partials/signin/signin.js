@@ -4,6 +4,8 @@ signin.controller('SignInCtrl', ['$scope','md5', '$firebaseAuth','$route','$loca
     function ($scope,md5, $firebaseAuth, $route, $location, $rootScope, $window) {
     console.log("SignIn Controller reporting for duty.");
     $scope.isAdmin = false;
+    $scope.isManager= false;
+    $scope.isVoter = true;
     
     if(firebase.auth().currentUser == null){
         $scope.userSignedIn = false;
@@ -26,13 +28,24 @@ signin.controller('SignInCtrl', ['$scope','md5', '$firebaseAuth','$route','$loca
             console.log($scope.userSignedIn);
             var hash = md5.createHash(firebase.auth().currentUser.email);
             console.log(firebase.auth().currentUser.email);
-            var ref = firebase.database().ref('admins/' + hash);
+            var ref = firebase.database().ref();
             ref.once("value").then(function(snapshot){
-                console.log(snapshot.val());
-                if(snapshot.exists()){
-                    console.log("isadmin");
+                var admin = snapshot.child('admins/' + hash).val();
+                if(admin !=null){
                     $scope.isAdmin = true;
-                    $scope.$apply();
+                    $scope.isVoter = false;
+                    console.log("isAdmin");
+                    $window.location.href = '#/adminDashboard';
+                }else{
+                    var manager = snapshot.child('managers/' + hash).val();
+                    if(manager != null){
+                        $scope.isManager = true;
+                        $scope.isVoter = false;
+                        console.log("isManager");
+                        $window.location.href = '#/managerDashboard';
+                    }else{
+                        $window.location.href = '#/voterDashboard';
+                    }
                 }
             });
             $scope.$apply();
@@ -65,8 +78,8 @@ signin.controller('SignInCtrl', ['$scope','md5', '$firebaseAuth','$route','$loca
     $scope.signOut = function(){
         firebase.auth().signOut();
         console.log("Signout button clicked");
-        $route.reload();
-       // $scope.$apply();
+        $window.location.href = '#/';
+        $scope.$apply();
     };
 
     $scope.signIn = function(){
@@ -85,24 +98,48 @@ signin.controller('SignInCtrl', ['$scope','md5', '$firebaseAuth','$route','$loca
             var email = $scope.user.email;
             var password = $scope.user.password;
 
-            firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error){
-               console.log(error.code);
-               var errorCode = error.code;
+            firebase.auth().signInWithEmailAndPassword(email, password)
+                .then(function(){
+                    var hash = md5.createHash(email);
+                    var ref = firebase.database().ref();
+                    ref.once("value").then(function(snapshot){
+                        var admin = snapshot.child('admins/' + hash).val();
+                        if(admin !=null){
+                            $scope.isAdmin = true;
+                            $scope.isVoter = false;
+                            console.log("isAdmin");
+                            $window.location.href = '#/adminDashboard';
+                        }else{
+                            var manager = snapshot.child('managers/' + hash).val();
+                            if(manager != null){
+                                $scope.isManager = true;
+                                $scope.isVoter = false;
+                                console.log("isManager");
+                                $window.location.href = '#/managerDashboard';
+                            }else{
+                                $window.location.href = '#/voterDashboard';
+                            }
+                        }
+                    })
+                })
+                .catch(function(error){
+                   console.log(error.code);
+                   var errorCode = error.code;
 
-               if(errorCode === 'auth/invalid-email'){
-                    $scope.user.invalidEmail = true;
-               }
-               if(errorCode === 'auth/user-not-found' || errorCode === 'auth/user-disabled'){
-                   $scope.user.userDoesNotExist = true;
-               }
-               if(errorCode === 'auth/wrong-password'){
-                   $scope.user.incorrectPassword = true;
-               }else{
-                   console.log("random error?");
-               }
+                   if(errorCode === 'auth/invalid-email'){
+                        $scope.user.invalidEmail = true;
+                   }
+                   if(errorCode === 'auth/user-not-found' || errorCode === 'auth/user-disabled'){
+                       $scope.user.userDoesNotExist = true;
+                   }
+                   if(errorCode === 'auth/wrong-password'){
+                       $scope.user.incorrectPassword = true;
+                   }else{
+                       console.log("random error?");
+                   }
 
 
-            });
+                });
 
             //console.log(firebase.auth().currentUser.email);
             if(!$scope.regForm.$invalid){
@@ -113,6 +150,8 @@ signin.controller('SignInCtrl', ['$scope','md5', '$firebaseAuth','$route','$loca
                 $scope.user.email= '';
                 $scope.user.password = '';
             }
+            
+            
         }
         //$scope.$apply();
         $route.reload();

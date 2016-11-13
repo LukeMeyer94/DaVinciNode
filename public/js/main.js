@@ -10,7 +10,10 @@ var app = angular.module('tutorialWebApp', [
   'tutorialWebApp.signin',
   'tutorialWebApp.voting',
   'tutorialWebApp.createAdmin',
-  'tutorialWebApp.createManager']
+  'tutorialWebApp.createManager',
+  'tutorialWebApp.voterDashboard',
+  'tutorialWebApp.managerDashboard',
+  'tutorialWebApp.adminDashboard']
 );
 
 /**
