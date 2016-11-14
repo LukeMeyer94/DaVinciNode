@@ -12,6 +12,5 @@ angular.module('tutorialWebApp.managerDashboard', ['ngRoute','firebase'])
 
 .controller('managerDashboardCtrl', ['$scope', '$firebaseAuth', function ($scope, $firebaseAuth) {
     console.log("Manager Dashboard Controller reporting for duty.");
-    
 
 }]);
