@@ -10,16 +10,55 @@ angular.module('tutorialWebApp.adminDashboard', ['ngRoute','firebase', 'ui.boots
   });
 }])
 
-.controller('adminDashboardCtrl', ['$scope', '$firebaseAuth', function ($scope, $firebaseAuth) {
+.controller('adminDashboardCtrl', ['$scope', 'md5', '$firebaseAuth', function ($scope,md5, $firebaseAuth) {
     console.log("Admin Dashboard Controller reporting for duty.");
 
     $scope.showElectionForm = false;
+    $scope.showCreateCandidate = false;
+    
+    $scope.newCandidate = {
+        
+    }
     
     $scope.election = {
         
     }
-
-  $scope.today = function() {
+    
+    $scope.createCandidate = function(){
+        var name = $scope.newCandidate.Name;
+        var party = $scope.newCandidate.party;
+        var hash = md5.createHash(name);
+        
+        var ref = firebase.database().ref('Candidates/' + hash);
+        ref.once("value").then(function(snapshot){
+           if(snapshot.val() === null){
+               ref.set({
+                   name: name,
+                   party: party
+               });
+               
+               
+           } 
+        });
+        
+        $scope.newCandidate.name = '';
+               $scope.newCandidate.party = '';
+               $scope.showCreateCandidate = false;
+    }
+    
+    
+    function getCandidates(){
+        var ref = firebase.database().ref('Candidates/');
+        ref.once("value").then(function(snapshot){
+           $scope.candidates = snapshot.val();
+            console.log($scope.candidates);
+        });
+    }
+    getCandidates();
+    $scope.candidate1 = null;
+    $scope.candidate2 = null;
+    
+    $scope.today = function() {
     $scope.dt = new Date();
     $scope.dtEnd = new Date();
   };
