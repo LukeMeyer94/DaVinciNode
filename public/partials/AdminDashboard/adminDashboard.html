@@ -12,7 +12,6 @@
         <label for= "Description">Election Description</label>
         <textarea id = "Description" placeholder = "Election Description" class="form-control" rows="3" ng-model= "election.Description"></textarea>
       </div>
-      <button type="submit" class="btn btn-default" ng-click = "createElection();" ng-disable = "electionName || electionDescription">Submit</button>
     </form>
     <div class="row">
       <div class="col-md-6">
@@ -43,6 +42,13 @@
     <select name="repeatSelect2" id="repeatSelect2" ng-model="candidate2">
       <option ng-repeat="option in candidates" value="{{option.name}}">{{option.name}},  {{option.party}}</option>
     </select>
+    <div>
+        <h3>Precincts:</h3>
+        <label class="checkbox inline" ng-repeat="(key, value) in precincts">
+            <input class ="inline pull-left" type="checkbox" ng-model="item.precincts[key]" ng-click="test();"/>{{key}}
+        </label>
+    </div>
+    <button type="submit" class="btn btn-default" ng-click = "createElection();" ng-disable = "electionName || electionDescription">Submit</button>
 </div>
 
 <div class = "well well-lg text-center">

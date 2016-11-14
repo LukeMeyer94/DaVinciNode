@@ -24,6 +24,18 @@ angular.module('tutorialWebApp.adminDashboard', ['ngRoute','firebase', 'ui.boots
         
     }
     
+    $scope.precincts = {
+        
+    }
+    
+    $scope.item={
+        
+    }
+    
+    $scope.test = function(){
+        console.log($scope.item.precincts);
+    }
+    
     $scope.createCandidate = function(){
         var name = $scope.newCandidate.Name;
         var party = $scope.newCandidate.party;
@@ -58,6 +70,20 @@ angular.module('tutorialWebApp.adminDashboard', ['ngRoute','firebase', 'ui.boots
     $scope.candidate1 = null;
     $scope.candidate2 = null;
     
+    
+    function getPrecincts(){
+        var ref = firebase.database().ref('Precincts/');
+        ref.once("value").then(function(snapshot){
+            snapshot.forEach(function(childSnapshot){
+                var key = childSnapshot.key;
+                var data = childSnapshot.val();
+                console.log(key);
+                console.log(data);
+                $scope.precincts[key] = data;
+            })
+        });
+    }
+    getPrecincts();
     $scope.today = function() {
     $scope.dt = new Date();
     $scope.dtEnd = new Date();
