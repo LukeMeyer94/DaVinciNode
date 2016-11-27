@@ -43,20 +43,52 @@
       <option ng-repeat="option in candidates" value="{{option.name}}">{{option.name}},  {{option.party}}</option>
     </select>
     <div>
-        <h3>Precincts:</h3>
-        <label for="repeatSelect3">Precincts:</label>
-        <select multiple>
-            <option>PRECINCT 1</option>
-            <option>PRECINCT 2</option>
-            <option>PRECINCT 3</option>
-            <option>PRECINCT 4</option>
-            <option>PRECINCT 5</option>
-            <option>PRECINCT 6</option>
+      <h3>Pick Election Level</h3>
+      <label class="radio-inline" ng-show="!typeChosen" >
+        <input type="radio" name="optradio" ng-model="race.level" value="National" ng-show="!typeChosen" ng-click="typeChosen = !typeChosen">National
+      </label>
+      <label class="radio-inline" ng-show="!typeChosen" >
+        <input type="radio" name="optradio" ng-model="race.level" value="State" ng-show="!typeChosen" ng-click="typeChosen = !typeChosen">State
+      </label>
+      <label class="radio-inline" ng-show="!typeChosen" >
+        <input type="radio" name="optradio" ng-model="race.level" value="Precinct" ng-show="!typeChosen" ng-click="typeChosen = !typeChosen">Precinct Level
+      </label>
+      <div ng-show="race.level== 'National'">
+        <label for="selectTypeNational">Select race type:</label>
+        <select name="selectType" ng-model="race.name">
+          <option ng-repeat="(key,value) in races.national" ng-value="key">{{key}}</option>
         </select>
-        <label class="checkbox inline" ng-repeat="(key, value) in precincts">
-            <input class ="inline pull-left" type="checkbox" ng-model="item.precincts[key]" ng-click="test();"/>{{key}}
-        </label>
+      </div>
+      <div ng-show="race.level == 'State'">
+        <label for="selectType">Select race type:</label>
+        <select name="selectType" ng-model="race.name">
+          <option ng-repeat="(key,value) in races.state" ng-value="key">{{key}}</option>
+        </select>
+
+        <label for="selectState">Select State:</label>
+        <select name="selectState" ng-model="race.state">
+          <option ng-repeat="(key,value) in states" ng-value="key">{{key}}</option>
+        </select><br>
+        <h3>{{state.name}}</h3>
+      </div>
+      <div ng-show="race.level == 'Precinct'">
+        <label for="selectTypePrecinct">Select race type:</label>
+        <select name="selectTypePrecinct" ng-model="race.name">
+          <option ng-repeat="(key, value) in races.precinct" ng-value="key">{{key}}</option>
+        </select><br>
+        <label for="selectState">Select State of precinct:</label>
+        <select name="selectState" ng-model="race.state">
+          <option ng-repeat="(key,value) in states" ng-value="key">{{key}}</option>
+        </select>
+        <button type="button" class="btn btn-sm" ng-click="getThisStatePrecincts(race.state)">Get {{race.state}}'s Precincts</button><br>
+        <label for="selectPrecinct">Select Precinct:</label>
+        <select name="selectPrecinct" ng-model="race.precinct">
+          <option ng-repeat="(key,value) in race.precincts" ng-value="key">{{key}}</option>
+        </select>
+      </div>
+      
     </div>
+    <button style="background-color:transparent;" ng-show="typeChosen" ng-click="chooseDifferentType()"><span class="glyphicon glyphicon-remove"></span></button>
     <button type="submit" class="btn btn-default" ng-click = "createElection();" ng-disable = "electionName || electionDescription">Submit</button>
 </div>
 

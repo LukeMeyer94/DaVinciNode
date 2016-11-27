@@ -15,32 +15,98 @@ angular.module('tutorialWebApp.adminDashboard', ['ngRoute','firebase', 'ui.boots
 
     $scope.showElectionForm = false;
     $scope.showCreateCandidate = false;
-    
+
     $scope.newCandidate = {
-        
+
     }
-    
+
     $scope.election = {
-        
+
     }
-    
+
     $scope.precincts = {
-        
+
     }
-    
+
+    $scope.states = {
+
+    }
+
+    $scope.state = {
+
+    }
+
     $scope.item={
-        
+
     }
-    
+
+    $scope.level = {
+
+    }
+
+    $scope.race = {
+
+    }
+
+    $scope.races = {
+
+    }
+
+    $scope.typeChosen = false;
+
+    $scope.chooseDifferentType = function(){
+      $scope.typeChosen = false;
+      $scope.race = {};
+      $scope.$apply();
+    }
+
+    $scope.getThisStatePrecincts = function(state){
+      console.log(state);
+      var ref = firebase.database().ref('states/' + state);
+      ref.once("value").then(function(snapshot){
+        var str = snapshot.val();
+        console.log(str);
+        var nums = str.split('-');
+        console.log(nums);
+        var beginningZip = nums[0];
+        var endingZip = nums[1];
+        console.log(beginningZip);
+        console.log(endingZip);
+
+        var precinctsRef = firebase.database().ref('precincts/');
+        precinctsRef.once("value").then(function(snapshot){
+          var precincts = {};
+
+          snapshot.forEach(function(precinct){
+            console.log(precinct.val());
+            var precinctZip = precinct.val();
+            precinctZip = precinctZip.split('-')[0];
+            console.log(precinctZip);
+            if((precinctZip >= beginningZip) && (precinctZip <= endingZip)){
+              console.log("in range");
+              precincts[precinct.key] = precinct.val();
+
+              //$scope.race.precincts[precinct.key] = precinct.val();
+            }
+          })
+
+          console.log(precincts);
+          $scope.race.precincts = precincts;
+          $scope.$apply();
+          console.log($scope.race.precincts);
+        });
+      });
+    }
+
     $scope.test = function(){
         console.log($scope.item.precincts);
     }
-    
+
     $scope.createCandidate = function(){
         var name = $scope.newCandidate.Name;
         var party = $scope.newCandidate.party;
         var hash = md5.createHash(name);
-        
+
         var ref = firebase.database().ref('Candidates/' + hash);
         ref.once("value").then(function(snapshot){
            if(snapshot.val() === null){
@@ -48,17 +114,17 @@ angular.module('tutorialWebApp.adminDashboard', ['ngRoute','firebase', 'ui.boots
                    name: name,
                    party: party
                });
-               
-               
-           } 
+
+
+           }
         });
-        
+
         $scope.newCandidate.name = '';
                $scope.newCandidate.party = '';
                $scope.showCreateCandidate = false;
     }
-    
-    
+
+
     function getCandidates(){
         var ref = firebase.database().ref('Candidates/');
         ref.once("value").then(function(snapshot){
@@ -69,10 +135,10 @@ angular.module('tutorialWebApp.adminDashboard', ['ngRoute','firebase', 'ui.boots
     getCandidates();
     $scope.candidate1 = null;
     $scope.candidate2 = null;
-    
-    
+
+
     function getPrecincts(){
-        var ref = firebase.database().ref('Precincts/');
+        var ref = firebase.database().ref('precincts/');
         ref.once("value").then(function(snapshot){
             snapshot.forEach(function(childSnapshot){
                 var key = childSnapshot.key;
@@ -83,7 +149,36 @@ angular.module('tutorialWebApp.adminDashboard', ['ngRoute','firebase', 'ui.boots
             })
         });
     }
+
+    function getStates(){
+      var ref = firebase.database().ref('states/');
+      ref.once("value").then(function(snapshot){
+        snapshot.forEach(function(childSnapshot){
+          var key = childSnapshot.key;
+          var data = childSnapshot.val();
+          console.log(key);
+          console.log(data);
+          $scope.states[key]=data;
+        })
+      })
+    }
+
+    function getRaces(){
+      var ref=firebase.database().ref('races/');
+      ref.once("value").then(function(snapshot){
+        snapshot.forEach(function(childSnapshot){
+          var level = childSnapshot.key;
+          var racesForLevel = childSnapshot.val();
+          $scope.races[level] = racesForLevel;
+        })
+      })
+    }
     getPrecincts();
+    getStates();
+    getRaces();
+
+
+
     $scope.today = function() {
     $scope.dt = new Date();
     $scope.dtEnd = new Date();
