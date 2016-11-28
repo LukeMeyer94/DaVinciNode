@@ -3,11 +3,30 @@
   <label>Enter email of voter to promote:</label>
   <input type="email" ng-model="user.email">
   <button type="button" class="btn btn-sm" ng-click="search()">Search</button>
-  <label for="selectPrecinct">Select Precinct:</label>
-  <select name="selectPrecinct" ng-model="user.precinct">
-    <option ng-repeat="(key,value) in precincts" ng-value="key">{{key}}</option>
-  </select>
+
+  <h3>Pick Election Level</h3>
+  <label class="radio-inline" ng-show="!typeChosen" >
+    <input type="radio" name="optradio" ng-model="race.level" value="Precinct" ng-show="!typeChosen" ng-click="typeChosen = !typeChosen">Precinct
+  </label>
+  <label class="radio-inline" ng-show="!typeChosen" >
+    <input type="radio" name="optradio" ng-model="race.level" value="State" ng-show="!typeChosen" ng-click="typeChosen = !typeChosen">State
+  </label>
+  <div ng-show="race.level === 'Precinct'">
+    <label for="selectPrecinct">Select Precinct:</label>
+    <select name="selectPrecinct" ng-model="user.precinct">
+      <option ng-repeat="(key,value) in precincts" ng-value="key">{{key}}</option>
+    </select>
+  </div>
+  <div ng-show="race.level === 'State'">
+    <label for="selectState">Select State:</label>
+    <select name = "selectState" ng-model="user.state">
+      <option ng-repeat="(key,value) in states" ng-value="key">{{key}}</option>
+    </select>
+  </div>
+  <button style="background-color:transparent;" ng-show="typeChosen" ng-click="chooseDifferentType()"><span class="glyphicon glyphicon-remove"></span></button>
+
   <h3>Selected Precinct: {{user.precinct}}</h3>
+  <h3>Selected State: {{user.state}}</h3>
   <h3>Found: {{voter.firstName}} {{voter.lastName}}</h3>
   <button type="button" class="btn btn-sm" ng-click="makeManager()" ng-disabled="voterNotFound">Make {{voter.firstName}} a manager</button>
   <p ng-show="managerSuccess">Manager made!</p>

@@ -20,24 +20,67 @@ angular.module('tutorialWebApp.createManager', ['ngRoute','firebase'])
 
     $scope.precincts = {};
 
+    $scope.race = {};
+
+    $scope.states = {};
+
+    $scope.typeChosen = false;
+
     $scope.managerSuccess = false;
     $scope.voterNotFound = false;
 
     getVoters();
     getPrecincts();
+    getStates();
 
 
+
+
+    $scope.chooseDifferentType = function(){
+      $scope.typeChosen = false;
+      $scope.race = {};
+      $scope.voter = {};
+      $scope.user = {};
+      $scope.$apply();
+    }
+
+    function getStates(){
+      var ref = firebase.database().ref('states/');
+      ref.once("value").then(function(snapshot){
+        snapshot.forEach(function(childSnapshot){
+          var key = childSnapshot.key;
+          var data = childSnapshot.val();
+          console.log(key);
+          console.log(data);
+          $scope.states[key]=data;
+        })
+      })
+    }
 
     $scope.makeManager = function(){
-      console.log($scope.user.precinct);
-      $scope.voter['precinct'] = $scope.user.precinct;
-      console.log($scope.voter);
-      var ref = firebase.database().ref('managers/' +  $scope.hash);
-      ref.set($scope.voter);
+      if($scope.user.precinct != null){
+        console.log($scope.user.precinct);
+        $scope.voter['precinct'] = $scope.user.precinct;
+        console.log($scope.voter);
+        var ref = firebase.database().ref('managers/' +  $scope.hash);
+        ref.set($scope.voter);
 
-      var updates = {};
-      updates['precincts/' + $scope.user.precinct + '/manager'] = $scope.hash;
-      var up = firebase.database().ref().update(updates);
+        var updates = {};
+        updates['precincts/' + $scope.user.precinct + '/manager'] = $scope.hash;
+        var up = firebase.database().ref().update(updates);
+
+      }else if($scope.user.state != null){
+        console.log($scope.user.state);
+        $scope.voter['state'] = $scope.user.state;
+        console.log($scope.voter);
+        var ref = firebase.database().ref('managers/' +  $scope.hash);
+        ref.set($scope.voter);
+
+        var updates = {};
+        updates['states/' + $scope.user.state + '/manager'] = $scope.hash;
+        var up = firebase.database().ref().update(updates);
+
+      }
       
       var removalRef = firebase.database().ref('voters/' + $scope.hash);
       removalRef.remove().then(function(){

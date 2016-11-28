@@ -30,6 +30,7 @@ angular.module('tutorialWebApp.signup', ['ngRoute','firebase'])
                 firebase.auth().signInWithEmailAndPassword(email, password)
                 .then(function(){
                          console.log("successfully signed in new user");
+                            email = email.toLowerCase();//firebase stores emails non-case-sensitive: this is so we can use auth().currentUser;
                             var hash = md5.createHash(email);
                             firebase.database().ref('voters/' + hash).set({
                                 firstName: firstName,

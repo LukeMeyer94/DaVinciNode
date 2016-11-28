@@ -64,7 +64,7 @@ angular.module('tutorialWebApp.adminDashboard', ['ngRoute','firebase', 'ui.boots
       console.log(state);
       var ref = firebase.database().ref('states/' + state);
       ref.once("value").then(function(snapshot){
-        var str = snapshot.val();
+        var str = snapshot.child('zipcodes').val();
         console.log(str);
         var nums = str.split('-');
         console.log(nums);
