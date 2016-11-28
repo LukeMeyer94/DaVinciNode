@@ -21,6 +21,7 @@ angular.module('tutorialWebApp.createAdmin', ['ngRoute','firebase'])
     $scope.voter = {};
 
     $scope.adminSuccess = false;
+    $scope.voterNotFound = false;
 
     getVoters();
 
@@ -29,14 +30,14 @@ angular.module('tutorialWebApp.createAdmin', ['ngRoute','firebase'])
       ref.set($scope.voter);
 
       var removalRef = firebase.database().ref('voters/' + $scope.hash);
-      removalRef.remove().catch(function(error){
+      removalRef.remove().then(function(){
+        $scope.voter = {};
+        $scope.hash = '';
+        $scope.adminSuccess = true;
+        $scope.$apply();
+      }).catch(function(error){
         console.log(error.message);
       });
-
-      $scope.voter = {};
-      $scope.hash = '';
-      $scope.adminSuccess = true;
-      $scope.$apply();
     }
 
     $scope.search = function(){
@@ -45,10 +46,19 @@ angular.module('tutorialWebApp.createAdmin', ['ngRoute','firebase'])
       var user = null;
       console.log($scope.hash);
       var ref = firebase.database().ref('voters/' + $scope.hash);
+      $scope.voterNotFound = true;
+
       ref.once("value").then(function(snapshot){
         console.log("upinhere");
-        $scope.voter = snapshot.val();
+        console.log(snapshot.val());
+        if(snapshot.val()!=null){
+          $scope.voter = snapshot.val();
+          $scope.voterNotFound = false;
+        }else{
+          $scope.voter = {};
+        }
         $scope.$apply();
+
       });
 
 

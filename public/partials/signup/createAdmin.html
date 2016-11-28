@@ -5,6 +5,7 @@
       <button type="button" class="btn btn-sm" ng-click="search()">Search</button>
 
       <h3>Found: {{voter.firstName}} {{voter.lastName}}</h3>
-      <button type="button" class="btn btn-sm" ng-click="makeAdmin()">Make {{voter.firstName}} an admin</button>
+      <button type="button" class="btn btn-sm" ng-click="makeAdmin()" ng-disabled="voterNotFound">Make {{voter.firstName}} an admin</button>
       <p ng-show="adminSuccess">Admin made!</p>
+      <p ng-show="voterNotFound">Voter not found</p>
 </div>

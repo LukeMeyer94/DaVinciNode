@@ -79,7 +79,7 @@ angular.module('tutorialWebApp.adminDashboard', ['ngRoute','firebase', 'ui.boots
 
           snapshot.forEach(function(precinct){
             console.log(precinct.val());
-            var precinctZip = precinct.val();
+            var precinctZip = precinct.child('zipcodes').val();
             precinctZip = precinctZip.split('-')[0];
             console.log(precinctZip);
             if((precinctZip >= beginningZip) && (precinctZip <= endingZip)){
