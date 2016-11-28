@@ -125,13 +125,7 @@ angular.module('tutorialWebApp.adminDashboard', ['ngRoute','firebase', 'ui.boots
     }
 
     $scope.createElection = function(){
-      console.log($scope.dt.day);
-      console.log($scope.dt.month);
-      console.log($scope.dt.dd);
-      console.log($scope.dt.MM);
-      console.log($scope.dtEnd);
-      console.log($scope.dt.getFullYear());
-      console.log($scope.dt.getDate());
+      
       if($scope.race.level === 'National'){
         var newKey = firebase.database().ref().child('elections/').push().key;
 

@@ -2,16 +2,14 @@
         <form class="form-vote" name="regForm">
           <!-- remove the below mock data once we get dynamic data -->
           <div class="electionBox">
-            <div class="electionLabel">United States Primary Election</div>
+            <div class="electionLabel"><h1>{{election.Name}}</h1></div>
             <div class="container">
               <div class="row">
                 <div class="candidate candidate1 col-md-6">
-                  <img ng-src="/imgs/Trump.jpeg" class="img-responsive candidate-pic" alt="Trump">
-                  <input type="radio" name="candidate" value="Trump" class="voting-radio-button"> Donald Trump - Republican</input>
+                  <input type="radio" name="candidate" value="Trump" class="voting-radio-button"> {{cand1.name}} - {{cand1.party}}</input>
                 </div>
                 <div class="candidate candidate2 col-md-6">
-                  <img ng-src="/imgs/Clinton.jpeg" class="img-responsive candidate-pic" alt="Clinton">
-                  <input type="radio" name="candidate" value="Clinton" class="voting-radio-button"> Hillary Clinton - Democrat</input>
+                  <input type="radio" name="candidate" value="Clinton" class="voting-radio-button"> {{cand2.name}} - {{cand2.party}}</input>
                 </div>
               </div>
             </div>
