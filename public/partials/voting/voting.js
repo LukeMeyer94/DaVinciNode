@@ -12,6 +12,16 @@ angular.module('tutorialWebApp.voting', ['ngRoute','firebase'])
 
 .controller('VotingCtrl', ['$scope', '$location','md5', '$firebaseAuth', function ($scope,$location, md5, $firebaseAuth) {
     console.log("Voting Controller reporting for duty.");
+    // closing nav bar on any page change
+    $('.navbar-collapse').removeClass('in');
+
+    // closing nav bar on any page change
+    $scope.$on('$locationChangeStart', function(event) {
+      console.log("page change");
+        if($('.navbar-collapse').hasClass('in')){
+          $('.navbar-collapse').removeClass('in');
+        }
+    });
 
     $scope.url = $location.url().split('/')[2];
 

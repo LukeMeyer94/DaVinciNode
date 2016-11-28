@@ -13,6 +13,8 @@ angular.module('tutorialWebApp.signup', ['ngRoute','firebase'])
 .controller('SignUpCtrl', ['$scope', 'md5','$location','$rootScope','$window','$firebaseAuth',
     function ($scope, md5, $location, $rootScope, $window, $firebaseAuth) {
     console.log("SignUp Controller reporting for duty.");
+    // closing nav bar on any page change
+    $('.navbar-collapse').removeClass('in');
 
     function registerUser(email, password, birthday, zipcode, ssn, licenseNumber,firstName,lastName){
         console.log("Register User function");
@@ -57,7 +59,7 @@ angular.module('tutorialWebApp.signup', ['ngRoute','firebase'])
                 });
                 return true;
     }
-    
+
      $scope.doVerify = function() {
       firebase.auth()
         //https://firebase.google.com/docs/reference/js/firebase.auth.Auth#applyActionCode
