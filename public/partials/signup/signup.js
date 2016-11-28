@@ -57,6 +57,26 @@ angular.module('tutorialWebApp.signup', ['ngRoute','firebase'])
                 });
                 return true;
     }
+    
+     $scope.doVerify = function() {
+      firebase.auth()
+        //https://firebase.google.com/docs/reference/js/firebase.auth.Auth#applyActionCode
+        .applyActionCode('TEMPVOTERID')
+        .then(function(data) {
+          console.log('SENT EMAIL TO '+email)
+          // DatabaseRef is just a service
+          // that returns the root of my database url
+          //DatabaseRef.child('users')
+            //.child(currentAuth.uid)
+            //.update({ emailVerified: true });
+          // the above is assuming you have root/users/uid/
+          //toastr.success('Verification happened', 'Success!');
+        })
+        .catch(function(error) {
+          $scope.error = error.message;
+          toastr.error(error.message, error.reason, { timeOut: 0 });
+        })
+    };
 
     $scope.signUp = function(){
         var email = $scope.user.email;
@@ -82,6 +102,7 @@ angular.module('tutorialWebApp.signup', ['ngRoute','firebase'])
         if(registered){
             console.log("All successful");
             $location.url('/');
+            //$scope.doVerify;
         }else{
             console.log("failed");
         }
