@@ -1,8 +1,24 @@
 <div style="margin-left:10%;margin-right:10%;">
   <h1 style="text-center;">Manager Dashboard</h1>
-  <div class="row" ng-repeat="election in elections" style="background-color: rgba(100,100,100,0.5);margin:20px;padding:20px;">
+
+  <h2>Open and upcoming elections:</h2><hr style="height:2px;border-color:#000;">
+  <div class="row" ng-repeat="(key,election) in elections" ng-show="election.status === 'open' || election.status === 'IP' " style="background-color: rgba(100,100,100,0.5);margin:20px;padding:20px;">
     <h3>{{election.electionName}}</h3><h4> -- {{election.raceName}} -- {{election.state}}{{election.precinct}}</h4><hr style="border-color:#000;height:2px;">
     <h4>{{election.candidate1}} vs. {{election.candidate2}}</h4>
-    <p>{{election.description}}</h4>
+    <p>{{election.description}}</p><br>
+    <p>Start Date: {{election.startMonth}}-{{election.startDay}}-{{election.startYear}}</p>
+    <p>End Date: {{election.endMonth}}-{{election.endDay}}-{{election.endYear}}</p>
+    <button class="btn btn-block" ng-disabled="(dates[key].startDate - now) > 0" ng-show="election.status === 'open'" ng-click="startElection(key)">Start Election</button>
+    <button class="btn btn-block" ng-show="election.status === 'IP'" ng-click="endElection(key)">End Election</button>
+  </div>
+  <h2>Closed elections:</h2><hr style="height:2px;border-color:#000;">
+  <div class="row" ng-repeat="(key,election) in elections" ng-show="election.status === 'closed'" style="background-color: rgba(100,100,100,0.5);margin:20px;padding:20px;">
+    <h3>{{election.electionName}}</h3><h4> -- {{election.raceName}} -- {{election.state}}{{election.precinct}}</h4><hr style="border-color:#000;height:2px;">
+    <h4>{{election.candidate1}} vs. {{election.candidate2}}</h4>
+    <p>{{election.description}}</p><br>
+    <p>Start Date: {{election.startMonth}}-{{election.startDay}}-{{election.startYear}}</p>
+    <p>End Date: {{election.endMonth}}-{{election.endDay}}-{{election.endYear}}</p>
+    <button class="btn btn-block" ng-disabled="(dates[key].startDate - now) > 0" ng-show="election.status === 'open'" ng-click="startElection(key)">Start Election</button>
+    <button class="btn btn-block" ng-show="election.status === 'IP'" ng-click="endElection(key)">End Election</button>
   </div>
 </div>
