@@ -1,6 +1,12 @@
 <div class="container">
         <form class="form-signin" name="regForm">
         <div class="form-group">
+          <label>First Name:</label>
+          <input  id="firstName" ng-model="user.firstName">
+          <label>Last Name:</label>
+          <input  id="lastName" ng-model="user.lastName"><br>
+        </div>
+        <div class="form-group">
             <label>Email</label>
             <input type="email" id = "email" name="email" class="form-control" ng-model="user.email"><br/>
             <label>Re-Enter Email</label>
@@ -8,7 +14,7 @@
             <!--<p ng-show="">Enter a valid email.</p>-->
             <p ng-show="regForm.email != regForm.email-re">Emails do not match</p>
         </div>
-        
+
         <div class="form-group">
             <label>Password</label>
             <input type="password" id="password" name="password" class="form-control" ng-model="user.password" ng-minlength = "8"><br/>
@@ -17,17 +23,17 @@
             <p ng-show="regForm.password.$error.minlength">Min password length is 8 characters.</p>
             <p ng-show="regForm.password != regForm.password-re">Passwords do not match</p>
         </div>
-        
+
         <div class="form-group">
-            <label>Birthday</label>  
-            <input type="date" id="birthday" name="birthday" class="form-control" ng-model="user.birthday">
+            <label>Birthday</label>
+            <input id="birthday" name="birthday" class="form-control" ng-model="user.birthday">
         </div>
-        
+
         <div class="form-group">
-            <label>Zipcode</label>  
+            <label>Zipcode</label>
             <input type="text" id="zipcode" name="zipcode" class="form-control" ng-model="user.zipcode" required ng-pattern="/[0-9]/" maxlength="5" size="5">
         </div>
-        
+
         <div class="form-group">
             <label>SSN</label>
             <input type="text" id="ssn" name="ssn" class="form-control" required ui-mask="999-99-9999" ui-mask-placeholder ui-mask-placeholder-char="-" ng-model="user.ssn">
@@ -36,9 +42,9 @@
             <label>Driver's License Number</label> <br/>
             <input type="text" id="license" name="license" class="form-control" ng-model="user.license" required ng-pattern="/[0-9]/" size="15">
         </div>
-          
-          
-          
+
+
+
         <button type="button" ng-click="signUp();" id="Registerbutton" class="btn btn-lg btn-primary btn-block">Register</button>
         </form>
 </div>

@@ -10,69 +10,55 @@ angular.module('tutorialWebApp.createAdmin', ['ngRoute','firebase'])
   });
 }])
 
-.controller('createAdminCtrl', ['$scope','md5', '$firebaseAuth','$route','$location', '$rootScope', '$window', 
+.controller('createAdminCtrl', ['$scope','md5', '$firebaseAuth','$route','$location', '$rootScope', '$window',
     function ($scope,md5, $firebaseAuth, $route, $location, $rootScope, $window) {
     console.log("createAdmin Controller reporting for duty.");
-  
-    
-    function registerUser(email, password){
-        console.log("Register User function");
-        firebase.auth().createUserWithEmailAndPassword(email, password)
-            .catch(function(error){//this error checking should catch already exists type stuff
-                var errorCode = error.code;
-                var errorMessage = error.message;
-                console.log("Error: " + errorMessage);//TODO: add something here to do a fancy pop up if error is thrown
-                return false;
-            })
-            .then(function(){
-                console.log("successfully authorized user");
-                
-                //sign in newly authorized user
-                firebase.auth().signInWithEmailAndPassword(email, password)
-                .then(function(){
-                         console.log("successfully signed in new user");
-                            var hash = md5.createHash(email);
-                            firebase.database().ref('admins/' + hash).set({
-                                email: email
-                            }).catch(function(error){
-                                 var errorcode = error.code;
-                                 var errorMessage = error.message;
-                                 console.log("Error: " + errorMessage);
-                                 return false;
-                            });
-                         });
-                         //numNP.once("value").then(function(snapshot){})
-                         
-                        
-                })
-                .catch(function(error){
-                    console.log("Error: " + error.message);
-                    return false;
-                });
-                return true;
+
+    $scope.voters = {};
+
+    $scope.user = {};
+
+    $scope.voter = {};
+
+    $scope.adminSuccess = false;
+
+    getVoters();
+
+    $scope.makeAdmin = function(){
+      var ref = firebase.database().ref('admins/' +  $scope.hash);
+      ref.set($scope.voter);
+
+      var removalRef = firebase.database().ref('voters/' + $scope.hash);
+      removalRef.remove().catch(function(error){
+        console.log(error.message);
+      });
+
+      $scope.voter = {};
+      $scope.hash = '';
+      $scope.adminSuccess = true;
+      $scope.$apply();
     }
 
-    $scope.signUp = function(){
+    $scope.search = function(){
+      var email = $scope.user.email;
+      $scope.hash = md5.createHash(email);
+      var user = null;
+      console.log($scope.hash);
+      var ref = firebase.database().ref('voters/' + $scope.hash);
+      ref.once("value").then(function(snapshot){
+        console.log("upinhere");
+        $scope.voter = snapshot.val();
+        $scope.$apply();
+      });
 
-        var email = $scope.user.email;
-        var email2= $scope.user.email2;
-        
-        var password = $scope.user.password;
-        var passwrod2= $scope.user.password2;    
-        var registered = registerUser(email, password);
-        
-        if(registered){
-            console.log("All successful");
-            $location.url('/');
-        }else{
-            console.log("failed");
-        }
-        
-        $scope.user.email = '';
-        $scope.user.email2 = '';
-        $scope.user.password = '';
-        $scope.user.password2 = '';
-    };
+
+    }
+
+
+    function getVoters(){
+      var ref = firebase.database().ref('voters/');
+      ref.once("value").then(function(snapshot){
+        $scope.voters = snapshot.val();
+      });
+    }
 }]);
-
-

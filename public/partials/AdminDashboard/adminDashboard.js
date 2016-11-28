@@ -124,6 +124,89 @@ angular.module('tutorialWebApp.adminDashboard', ['ngRoute','firebase', 'ui.boots
                $scope.showCreateCandidate = false;
     }
 
+    $scope.createElection = function(){
+      if($scope.race.level === 'National'){
+        var newKey = firebase.database().ref().child('elections/').push().key;
+
+        var candidate1 = md5.createHash($scope.candidate1);
+        console.log(candidate1);
+        var candidate2 = md5.createHash($scope.candidate2);
+        console.log(candidate2);
+
+        var ref = firebase.database().ref('elections/' + newKey).set({
+          electionName: $scope.election.Name,
+          description: $scope.election.Description,
+          startDate: $scope.dt,
+          endDate: $scope.dtEnd,
+          candidate1: $scope.candidate1,
+          candidate2: $scope.candidate2,
+          raceLevel: $scope.race.level,
+          raceName: $scope.race.name
+
+        }).catch(function(error){
+             var errorcode = error.code;
+             var errorMessage = error.message;
+             console.log("Error: " + errorMessage);
+
+        });
+        console.log('national');
+      }else if($scope.race.level === 'State'){
+        var newKey = firebase.database().ref().child('elections/').push().key;
+
+        var candidate1 = md5.createHash($scope.candidate1);
+        console.log(candidate1);
+        var candidate2 = md5.createHash($scope.candidate2);
+        console.log(candidate2);
+
+        var ref = firebase.database().ref('elections/' + newKey).set({
+          electionName: $scope.election.Name,
+          description: $scope.election.Description,
+          startDate: $scope.dt,
+          endDate: $scope.dtEnd,
+          candidate1: $scope.candidate1,
+          candidate2: $scope.candidate2,
+          raceLevel: $scope.race.level,
+          raceName: $scope.race.name,
+          state: $scope.race.state
+
+        }).catch(function(error){
+             var errorcode = error.code;
+             var errorMessage = error.message;
+             console.log("Error: " + errorMessage);
+
+        });
+        console.log('state');
+      }else if($scope.race.level === 'Precinct'){
+        var newKey = firebase.database().ref().child('elections/').push().key;
+
+        var candidate1 = md5.createHash($scope.candidate1);
+        console.log(candidate1);
+        var candidate2 = md5.createHash($scope.candidate2);
+        console.log(candidate2);
+
+        var ref = firebase.database().ref('elections/' + newKey).set({
+          electionName: $scope.election.Name,
+          description: $scope.election.Description,
+          startDate: $scope.dt,
+          endDate: $scope.dtEnd,
+          candidate1: $scope.candidate1,
+          candidate2: $scope.candidate2,
+          raceLevel: $scope.race.level,
+          raceName: $scope.race.name,
+          precinct: $scope.race.precinct
+
+        }).catch(function(error){
+             var errorcode = error.code;
+             var errorMessage = error.message;
+             console.log("Error: " + errorMessage);
+
+        });
+        console.log('precinct');
+      }
+
+      $scope.showElectionForm = false;
+    }
+
 
     function getCandidates(){
         var ref = firebase.database().ref('Candidates/');

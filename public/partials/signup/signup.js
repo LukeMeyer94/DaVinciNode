@@ -10,11 +10,11 @@ angular.module('tutorialWebApp.signup', ['ngRoute','firebase'])
   });
 }])
 
-.controller('SignUpCtrl', ['$scope', 'md5','$location','$rootScope','$window','$firebaseAuth', 
+.controller('SignUpCtrl', ['$scope', 'md5','$location','$rootScope','$window','$firebaseAuth',
     function ($scope, md5, $location, $rootScope, $window, $firebaseAuth) {
     console.log("SignUp Controller reporting for duty.");
-   
-    function registerUser(email, password, birthday, zipcode, ssn, licenseNumber){
+
+    function registerUser(email, password, birthday, zipcode, ssn, licenseNumber,firstName,lastName){
         console.log("Register User function");
         firebase.auth().createUserWithEmailAndPassword(email, password)
             .catch(function(error){//this error checking should catch already exists type stuff
@@ -25,13 +25,15 @@ angular.module('tutorialWebApp.signup', ['ngRoute','firebase'])
             })
             .then(function(){
                 console.log("successfully authorized user");
-                
+
                 //sign in newly authorized user
                 firebase.auth().signInWithEmailAndPassword(email, password)
                 .then(function(){
                          console.log("successfully signed in new user");
                             var hash = md5.createHash(email);
                             firebase.database().ref('voters/' + hash).set({
+                                firstName: firstName,
+                                lastName: lastName,
                                 email: email,
                                 birthday: birthday,
                                 zipcode: zipcode,
@@ -45,8 +47,8 @@ angular.module('tutorialWebApp.signup', ['ngRoute','firebase'])
                             });
                          });
                          //numNP.once("value").then(function(snapshot){})
-                         
-                        
+
+
                 })
                 .catch(function(error){
                     console.log("Error: " + error.message);
@@ -58,29 +60,32 @@ angular.module('tutorialWebApp.signup', ['ngRoute','firebase'])
     $scope.signUp = function(){
         var email = $scope.user.email;
         var email2= $scope.user.email2;
-        
+
         var password = $scope.user.password;
         var passwrod2= $scope.user.password2;
 
         var birthday = $scope.user.birthday;
-        
+
         var zipcode = $scope.user.zipcode;
-        
+
         var ssn = $scope.user.ssn;
-        
+
         var licenseNumber = $scope.user.license;
-        
-        var registered = registerUser(email, password, birthday, zipcode, ssn, licenseNumber);
-        
+        var firstName = $scope.user.firstName;
+        var lastName = $scope.user.lastName;
+        console.log(firstName);
+        console.log(lastName);
+
+        var registered = registerUser(email, password, birthday, zipcode, ssn, licenseNumber,firstName,lastName);
+
         if(registered){
             console.log("All successful");
             $location.url('/');
         }else{
             console.log("failed");
         }
-        
+
         $scope.user.email = '';
         $scope.user.password = '';
     };
 }]);
-
