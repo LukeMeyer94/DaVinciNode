@@ -33,6 +33,8 @@ angular.module('tutorialWebApp.voterDashboard', ['ngRoute','firebase'])
     }
 
     function getElections(){
+      // closing nav bar on any page change
+      $('.navbar-collapse').removeClass('in');
       var ref = firebase.database().ref('elections');
       ref.once("value").then(function(snapshot){
         snapshot.forEach(function(election){
