@@ -62,6 +62,8 @@
             <ul class= "nav navbar-nav navbar-right">
                 <li><a ng-show="userSignedIn" ng-click="goToProfile();">My Profile</a>
                 </li>
+                <li><a ng-show="userSignedIn" href="#/voterDashboard">Vote</a>
+                </li>
                 <li><a ng-show="isAdmin" href="#/createAdmin">Create new Admin</a>
                 </li>
                 <li><a ng-show="isAdmin" href="#/createManager">Create new Manager</a>
