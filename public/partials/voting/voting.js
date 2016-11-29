@@ -15,14 +15,6 @@ angular.module('tutorialWebApp.voting', ['ngRoute','firebase'])
     // closing nav bar on any page change
     $('.navbar-collapse').removeClass('in');
 
-    // closing nav bar on any page change
-    $scope.$on('$locationChangeStart', function(event) {
-      console.log("page change");
-        if($('.navbar-collapse').hasClass('in')){
-          $('.navbar-collapse').removeClass('in');
-        }
-    });
-
     $scope.url = $location.url().split('/')[2];
 
     $scope.election = {
