@@ -29,7 +29,7 @@ angular.module('tutorialWebApp.voterDashboard', ['ngRoute','firebase'])
       console.log(updates);
       $location.url('/voting/' + key);
       $route.reload();
-      //var up = firebase.database().ref().update(updates);
+      var up = firebase.database().ref().update(updates);
     }
 
     function getElections(){

@@ -44,16 +44,41 @@ angular.module('tutorialWebApp.managerDashboard', ['ngRoute','firebase'])
       console.log(key);
       var updates = {};
       updates['elections/' + key + '/status'] = 'IP';
+      updates['elections/' + key + '/score1'] = 0;
+      updates['elections/' + key + '/score2'] = 0;
       var up = firebase.database().ref().update(updates);
       $route.reload();
     }
 
     $scope.endElection = function(key){
       console.log(key);
-      var updates = {};
-      updates['elections/' + key + '/status'] = 'closed';
-      var up = firebase.database().ref().update(updates);
-      $route.reload();
+      $scope.winner = '';
+      var ref = firebase.database().ref('elections/'+key);
+      ref.once("value").then(function(snapshot){
+        console.log(snapshot.child('score1').val());
+        console.log(snapshot.child('score2').val());
+        if(snapshot.child('score1').val() > snapshot.child('score2').val()){
+          $scope.winner = snapshot.child('candidate1').val();
+          $scope.$apply();
+          console.log($scope.winner);
+        }else if(snapshot.child('score1').val() < snapshot.child('score2').val()){
+          $scope.winner = snapshot.child('candidate2').val();
+          $scope.$apply();
+          console.log($scope.winner);
+        }else {
+          $scope.winner = 'tie';
+          $scope.$apply();
+        }
+      }).then(function(){
+        var updates = {};
+        updates['elections/' + key + '/status'] = 'closed';
+        updates['elections/' + key + '/winner'] = $scope.winner;
+        firebase.database().ref().update(updates).then(function(){
+          $route.reload();
+        });
+      })
+
+
     }
 
     function getElections(){

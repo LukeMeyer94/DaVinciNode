@@ -125,7 +125,7 @@ angular.module('tutorialWebApp.adminDashboard', ['ngRoute','firebase', 'ui.boots
     }
 
     $scope.createElection = function(){
-      
+
       if($scope.race.level === 'National'){
         var newKey = firebase.database().ref().child('elections/').push().key;
 
@@ -147,7 +147,8 @@ angular.module('tutorialWebApp.adminDashboard', ['ngRoute','firebase', 'ui.boots
           candidate2: $scope.candidate2,
           raceLevel: $scope.race.level,
           raceName: $scope.race.name,
-          status: 'open'
+          status: 'open',
+          hasVoted: 'voted'
 
         }).catch(function(error){
              var errorcode = error.code;

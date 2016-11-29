@@ -6,6 +6,7 @@
     <h3>{{election.electionName}}</h3><h4> -- {{election.raceName}} -- {{election.state}}{{election.precinct}}</h4><hr style="border-color:#000;height:2px;">
     <h4>{{election.candidate1}} vs. {{election.candidate2}}</h4>
     <p>{{election.description}}</p><br>
+    <h4>Score: {{election.candidate1}} - {{election.score1}} , {{election.candidate2}} - {{election.score2}}</h4>
     <p>Start Date: {{election.startMonth}}-{{election.startDay}}-{{election.startYear}}</p>
     <p>End Date: {{election.endMonth}}-{{election.endDay}}-{{election.endYear}}</p>
     <button class="btn btn-block" ng-disabled="(dates[key].startDate - now) > 0" ng-show="election.status === 'open'" ng-click="startElection(key)">Start Election</button>
@@ -16,6 +17,7 @@
     <h3>{{election.electionName}}</h3><h4> -- {{election.raceName}} -- {{election.state}}{{election.precinct}}</h4><hr style="border-color:#000;height:2px;">
     <h4>{{election.candidate1}} vs. {{election.candidate2}}</h4>
     <p>{{election.description}}</p><br>
+    <h3>Winner: {{election.winner}}</h3>
     <p>Start Date: {{election.startMonth}}-{{election.startDay}}-{{election.startYear}}</p>
     <p>End Date: {{election.endMonth}}-{{election.endDay}}-{{election.endYear}}</p>
     <button class="btn btn-block" ng-disabled="(dates[key].startDate - now) > 0" ng-show="election.status === 'open'" ng-click="startElection(key)">Start Election</button>
