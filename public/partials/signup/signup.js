@@ -59,33 +59,12 @@ angular.module('tutorialWebApp.signup', ['ngRoute','firebase'])
                 });
                 return true;
     }
-
-     $scope.doVerify = function() {
-      firebase.auth()
-        //https://firebase.google.com/docs/reference/js/firebase.auth.Auth#applyActionCode
-        .applyActionCode('TEMPVOTERID')
-        .then(function(data) {
-          console.log('SENT EMAIL TO '+email)
-          // DatabaseRef is just a service
-          // that returns the root of my database url
-          //DatabaseRef.child('users')
-            //.child(currentAuth.uid)
-            //.update({ emailVerified: true });
-          // the above is assuming you have root/users/uid/
-          //toastr.success('Verification happened', 'Success!');
-        })
-        .catch(function(error) {
-          $scope.error = error.message;
-          toastr.error(error.message, error.reason, { timeOut: 0 });
-        })
-    };
-
     $scope.signUp = function(){
         var email = $scope.user.email;
-        var email2= $scope.user.email2;
+        //var email2= $scope.user.email2;
 
         var password = $scope.user.password;
-        var passwrod2= $scope.user.password2;
+        //var password2= $scope.user.password2;
 
         var birthday = $scope.user.birthday;
 
@@ -100,11 +79,29 @@ angular.module('tutorialWebApp.signup', ['ngRoute','firebase'])
         console.log(lastName);
 
         var registered = registerUser(email, password, birthday, zipcode, ssn, licenseNumber,firstName,lastName);
+    
+        var genID = function(ssn){
+            return ssn;
+        };
+        var id = genID(ssn);
+        console.log('HERE HERE HERE HERE')
+        var ref = firebase.database().ref('voterIDs/' + id).set({
+                zipcode: zipcode
+            }).catch(function(error){
+              var errorcode = error.code;
+              var errorMessage = error.message;
+              console.log("Error: " + errorMessage);
+            });
+        var data = {
+            email: email,
+            id: genID(ssn),
+            zipcode: zipcode
+        };
+        socket.emit('send email', data);
 
         if(registered){
             console.log("All successful");
             $location.url('/');
-            //$scope.doVerify;
         }else{
             console.log("failed");
         }
