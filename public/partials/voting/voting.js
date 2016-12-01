@@ -81,7 +81,7 @@ angular.module('tutorialWebApp.voting', ['ngRoute','firebase'])
 
               if((id.key === voterID)){
                 console.log('match found');
-                $scope.zipcode = id.val();
+                $scope.zipcode = id.child('zipcode').val();
                 console.log($scope.zipcode);
                 console.log($scope.election.level);
 

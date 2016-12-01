@@ -79,15 +79,21 @@ angular.module('tutorialWebApp.signup', ['ngRoute','firebase'])
         console.log(lastName);
 
         var registered = registerUser(email, password, birthday, zipcode, ssn, licenseNumber,firstName,lastName);
-    
-        var genID = function(ssn){
-            return ssn;
+
+        var genID = function(){
+            var updates = {};
+            var key = firebase.database().ref('voterIDs/').push().key;
+            console.log(key);
+            updates['voterIDs/' + key] = true;
+            firebase.database().ref().update(updates);
+            return key;
         };
-        
+
 
         if(registered){
-            var id = genID(ssn);
-            var ref = firebase.database().ref('voterIDs/' + id).set({
+            //var id = genID();
+            var key = firebase.database().ref('voterIDs/').push().key;
+            var ref = firebase.database().ref('voterIDs/' + key).set({
                     zipcode: zipcode
                 }).catch(function(error){
                   var errorcode = error.code;
@@ -96,11 +102,11 @@ angular.module('tutorialWebApp.signup', ['ngRoute','firebase'])
                 });
             var data = {
                 email: email,
-                id: genID(ssn),
+                id: key,
                 zipcode: zipcode
             };
             socket.emit('send email', data);
-        
+
             console.log("All successful");
             $location.url('/');
         }else{
