@@ -1,1 +1,14 @@
-<h1>VoterHomepage</h1>
+<div style="margin-left:10%;margin-right:10%;">
+  <h1>Voter Homepage</h1>
+  <div class="row" ng-repeat="(key,election) in elections" style="background-color: rgba(100,100,100,0.5);margin:20px;padding:20px;">
+    <h3>{{election.electionName}}</h3><h4> -- {{election.raceName}} -- {{election.state}}{{election.precinct}}</h4><hr style="border-color:#000;height:2px;">
+    <h4>{{election.candidate1}} vs. {{election.candidate2}}</h4>
+    <p>{{election.description}}</p><br>
+    <p>Start Date: {{election.startMonth}}-{{election.startDay}}-{{election.startYear}}</p>
+    <p>End Date: {{election.endMonth}}-{{election.endDay}}-{{election.endYear}}</p>
+    <button ng-click="showAlert = !showAlert">Vote</button>
+    <p ng-show="showAlert">Are you sure? This cannot be undone, this election will no longer show up on your dashboard.</p>
+    <button ng-show="showAlert" ng-click="vote(key)">Yes</button>
+    <button ng-show="showAlert" ng-click="showAlert = !showAlert">No</button>
+  </div>
+</div>

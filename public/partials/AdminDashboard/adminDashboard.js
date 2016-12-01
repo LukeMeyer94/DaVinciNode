@@ -125,6 +125,7 @@ angular.module('tutorialWebApp.adminDashboard', ['ngRoute','firebase', 'ui.boots
     }
 
     $scope.createElection = function(){
+
       if($scope.race.level === 'National'){
         var newKey = firebase.database().ref().child('elections/').push().key;
 
@@ -136,12 +137,18 @@ angular.module('tutorialWebApp.adminDashboard', ['ngRoute','firebase', 'ui.boots
         var ref = firebase.database().ref('elections/' + newKey).set({
           electionName: $scope.election.Name,
           description: $scope.election.Description,
-          startDate: $scope.dt,
-          endDate: $scope.dtEnd,
+          startDay: $scope.dt.getDate(),
+          startMonth: $scope.dt.getMonth(),
+          startYear: $scope.dt.getFullYear(),
+          endDay: $scope.dtEnd.getDate(),
+          endMonth: $scope.dtEnd.getMonth(),
+          endYear: $scope.dtEnd.getFullYear(),
           candidate1: $scope.candidate1,
           candidate2: $scope.candidate2,
           raceLevel: $scope.race.level,
-          raceName: $scope.race.name
+          raceName: $scope.race.name,
+          status: 'open',
+          hasVoted: 'voted'
 
         }).catch(function(error){
              var errorcode = error.code;
@@ -161,13 +168,18 @@ angular.module('tutorialWebApp.adminDashboard', ['ngRoute','firebase', 'ui.boots
         var ref = firebase.database().ref('elections/' + newKey).set({
           electionName: $scope.election.Name,
           description: $scope.election.Description,
-          startDate: $scope.dt,
-          endDate: $scope.dtEnd,
+          startDay: $scope.dt.getDate(),
+          startMonth: $scope.dt.getMonth(),
+          startYear: $scope.dt.getFullYear(),
+          endDay: $scope.dtEnd.getDate(),
+          endMonth: $scope.dtEnd.getMonth(),
+          endYear: $scope.dtEnd.getFullYear(),
           candidate1: $scope.candidate1,
           candidate2: $scope.candidate2,
           raceLevel: $scope.race.level,
           raceName: $scope.race.name,
-          state: $scope.race.state
+          state: $scope.race.state,
+          status: 'open'
 
         }).catch(function(error){
              var errorcode = error.code;
@@ -187,13 +199,18 @@ angular.module('tutorialWebApp.adminDashboard', ['ngRoute','firebase', 'ui.boots
         var ref = firebase.database().ref('elections/' + newKey).set({
           electionName: $scope.election.Name,
           description: $scope.election.Description,
-          startDate: $scope.dt,
-          endDate: $scope.dtEnd,
+          startDay: $scope.dt.getDate(),
+          startMonth: $scope.dt.getMonth(),
+          startYear: $scope.dt.getFullYear(),
+          endDay: $scope.dtEnd.getDate(),
+          endMonth: $scope.dtEnd.getMonth(),
+          endYear: $scope.dtEnd.getFullYear(),
           candidate1: $scope.candidate1,
           candidate2: $scope.candidate2,
           raceLevel: $scope.race.level,
           raceName: $scope.race.name,
-          precinct: $scope.race.precinct
+          precinct: $scope.race.precinct,
+          status: 'open'
 
         }).catch(function(error){
              var errorcode = error.code;

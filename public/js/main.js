@@ -20,20 +20,22 @@ var app = angular.module('tutorialWebApp', [
  * Configure the Routes
  */
 app.config(['$routeProvider', function ($routeProvider) {
+
   $routeProvider
-    .when("/", 
-        {   templateUrl: "partials/home/home.html", 
+    .when("/",
+        {   templateUrl: "partials/home/home.html",
             controller: "PageCtrl"
         })
     // else 404
-    .otherwise("/404", 
-        {   templateUrl: "partials/404.html", 
+    .otherwise("/404",
+        {   templateUrl: "partials/404.html",
             controller: "PageCtrl"
         });
 }]);
 
-app.controller('PageCtrl', function(){
+app.controller('PageCtrl', function($scope){
     console.log("Page Controller Reporting for duty");
+
+    // closing nav bar on any page change
+    $('.navbar-collapse').removeClass('in');
 })
-
-
