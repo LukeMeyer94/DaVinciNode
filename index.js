@@ -4,8 +4,8 @@ var http = require('http');
 var server = http.createServer(app);
 var io = require('socket.io').listen(server);
 var path = require('path');
-const crypto = require('crypto');
-const secret = 'hsdufaophap';
+var pdf = require('html-pdf');
+var fs = require('fs');
 
 var nodemailer = require('nodemailer');
 
@@ -35,6 +35,21 @@ function SendVID(vid, email) {
   });
 }
 
+function PrintPDF(vid, selection, election) {
+    var html = "Vote by " + vid + " for " + selection;
+    var options = { format: 'Letter' };
+    
+    var dir = './pdfs/'+election+'/';
+    if (!fs.existsSync(dir)){
+        fs.mkdirSync(dir);
+    }
+    
+    pdf.create(html, options).toFile(dir+vid+'.pdf', function(err, res) {
+        if (err) return console.log(err);
+            console.log(res); 
+    });
+}
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', function(req, res){
@@ -44,7 +59,10 @@ app.get('/', function(req, res){
 io.on('connection', function(socket){
     console.log("connected.");
     socket.on('send email',function(data){
-      SendVID(data.id, data.email);
+        SendVID(data.id, data.email);
+    });
+    socket.on('vote',function(data){
+        PrintPDF(data.id, data.selection, data.election);
     });
 });
 

@@ -39,7 +39,6 @@ angular.module('tutorialWebApp.voting', ['ngRoute','firebase'])
 
     $scope.vote = function(){
       var updates = {};
-
       updates['elections/' + $scope.url + '/hasVoted/' + $scope.user.voterID] = true;
       if($scope.choice.candidate == $scope.cand1.name){
         updates['elections/' + $scope.url + '/score1'] = $scope.election.score1 + 1;
@@ -49,9 +48,18 @@ angular.module('tutorialWebApp.voting', ['ngRoute','firebase'])
         updates['elections/' + $scope.url + '/score2'] = $scope.election.score2 + 1;
       }
       firebase.database().ref().update(updates);
+      
+      var data = {
+        id: $scope.user.voterID,
+        selection: $scope.choice.candidate,
+        election: $scope.election.Name
+        
+      };
+      
+      socket.emit('vote', data);
       $location.url('/');
       $route.reload();
-    }
+    };
 
 
     $scope.findUser = function(){
