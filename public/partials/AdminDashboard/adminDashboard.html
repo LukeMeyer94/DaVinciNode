@@ -107,6 +107,36 @@
         <label for= "party">Political Party</label>
         <input type="text" class="form-control" id="party" placeholder="Political Party" ng-model="newCandidate.party">
       </div>
+      <div class = "form-group">
+        <label for="bio">Bio:</label>
+        <input type="textarea" class="form-control" id="bio" placeholder="bio" ng-model="newCandidate.bio">
+      </div>
       <button type="submit" class="btn btn-default" ng-click = "createCandidate();">Submit</button>
     </form>
+</div>
+
+<div style="margin-left:10%;margin-right:10%;">
+  <h2>Open and upcoming elections:</h2><hr style="height:2px;border-color:#000;">
+  <div class="row" ng-repeat="(key,election) in elections" ng-show="election.status === 'open' || election.status === 'IP' || election.status === 'paused'" style="background-color: rgba(100,100,100,0.5);margin:20px;padding:20px;">
+    <h3>{{election.electionName}}</h3><h4> -- {{election.raceName}} -- {{election.state}}{{election.precinct}}</h4><hr style="border-color:#000;height:2px;">
+    <h4>{{election.candidate1}} vs. {{election.candidate2}}</h4>
+    <p>{{election.description}}</p><br>
+    <h4>Score: {{election.candidate1}} - {{election.score1}} , {{election.candidate2}} - {{election.score2}}</h4>
+    <p>Start Date: {{election.startMonth}}-{{election.startDay}}-{{election.startYear}}</p>
+    <p>End Date: {{election.endMonth}}-{{election.endDay}}-{{election.endYear}}</p>
+    <button class="btn btn-block" ng-disabled="(dates[key].startDate - now) > 0" ng-show="election.status === 'open' || isPaused[key]" ng-click="startElection(key)">Start Election</button>
+    <button class="btn btn-block" ng-show="!isPaused[key]" ng-click="pauseElection(key)">Pause Election</button>
+    <button class="btn btn-block" ng-show="false" ng-click="endElection(key)">End Election</button>
+  </div>
+  <h2>Closed elections:</h2><hr style="height:2px;border-color:#000;">
+  <div class="row" ng-repeat="(key,election) in elections" ng-show="election.status === 'closed'" style="background-color: rgba(100,100,100,0.5);margin:20px;padding:20px;">
+    <h3>{{election.electionName}}</h3><h4> -- {{election.raceName}} -- {{election.state}}{{election.precinct}}</h4><hr style="border-color:#000;height:2px;">
+    <h4>{{election.candidate1}} vs. {{election.candidate2}}</h4>
+    <p>{{election.description}}</p><br>
+    <h3>Winner: {{election.winner}}</h3>
+    <p>Start Date: {{election.startMonth}}-{{election.startDay}}-{{election.startYear}}</p>
+    <p>End Date: {{election.endMonth}}-{{election.endDay}}-{{election.endYear}}</p>
+    <button class="btn btn-block" ng-disabled="(dates[key].startDate - now) > 0" ng-show="election.status === 'open'" ng-click="startElection(key)">Start Election</button>
+    <button class="btn btn-block" ng-show="election.status === 'IP'" ng-click="endElection(key)">End Election</button>
+  </div>
 </div>

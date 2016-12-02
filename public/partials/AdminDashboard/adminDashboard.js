@@ -10,7 +10,7 @@ angular.module('tutorialWebApp.adminDashboard', ['ngRoute','firebase', 'ui.boots
   });
 }])
 
-.controller('adminDashboardCtrl', ['$scope', 'md5', '$firebaseAuth', function ($scope,md5, $firebaseAuth) {
+.controller('adminDashboardCtrl', ['$scope', 'md5', '$firebaseAuth','$route', function ($scope,md5, $firebaseAuth, $route) {
     console.log("Admin Dashboard Controller reporting for duty.");
 
     $scope.showElectionForm = false;
@@ -52,7 +52,20 @@ angular.module('tutorialWebApp.adminDashboard', ['ngRoute','firebase', 'ui.boots
 
     }
 
+    $scope.elections = {
+
+    }
+
+    $scope.dates = {
+
+    }
+
+    $scope.isPaused = {
+
+    }
+
     $scope.typeChosen = false;
+    $scope.now =  Date.now();
 
     $scope.chooseDifferentType = function(){
       $scope.typeChosen = false;
@@ -105,6 +118,7 @@ angular.module('tutorialWebApp.adminDashboard', ['ngRoute','firebase', 'ui.boots
     $scope.createCandidate = function(){
         var name = $scope.newCandidate.Name;
         var party = $scope.newCandidate.party;
+        var bio = $scope.newCandidate.bio;
         var hash = md5.createHash(name);
 
         var ref = firebase.database().ref('Candidates/' + hash);
@@ -112,7 +126,8 @@ angular.module('tutorialWebApp.adminDashboard', ['ngRoute','firebase', 'ui.boots
            if(snapshot.val() === null){
                ref.set({
                    name: name,
-                   party: party
+                   party: party,
+                   bio: bio
                });
 
 
@@ -148,7 +163,9 @@ angular.module('tutorialWebApp.adminDashboard', ['ngRoute','firebase', 'ui.boots
           raceLevel: $scope.race.level,
           raceName: $scope.race.name,
           status: 'open',
-          hasVoted: 'voted'
+          hasVoted: 'voted',
+          score1: 0,
+          score2: 0
 
         }).catch(function(error){
              var errorcode = error.code;
@@ -273,6 +290,83 @@ angular.module('tutorialWebApp.adminDashboard', ['ngRoute','firebase', 'ui.boots
         })
       })
     }
+
+    $scope.startElection = function(key){
+      console.log(key);
+      var updates = {};
+      $scope.isPaused[key] = false;
+      updates['elections/' + key + '/status'] = 'IP';
+      var up = firebase.database().ref().update(updates);
+      $route.reload();
+    }
+
+    $scope.pauseElection = function(key){
+      console.log(key);
+      var updates = {};
+      $scope.isPaused[key] = true;
+      updates['elections/' + key + '/status'] = 'paused';
+      var up = firebase.database().ref().update(updates);
+    }
+
+    $scope.endElection = function(key){
+      console.log(key);
+      $scope.winner = '';
+      var ref = firebase.database().ref('elections/'+key);
+      ref.once("value").then(function(snapshot){
+        console.log(snapshot.child('score1').val());
+        console.log(snapshot.child('score2').val());
+        if(snapshot.child('score1').val() > snapshot.child('score2').val()){
+          $scope.winner = snapshot.child('candidate1').val();
+          $scope.$apply();
+          console.log($scope.winner);
+        }else if(snapshot.child('score1').val() < snapshot.child('score2').val()){
+          $scope.winner = snapshot.child('candidate2').val();
+          $scope.$apply();
+          console.log($scope.winner);
+        }else {
+          $scope.winner = 'tie';
+          $scope.$apply();
+        }
+      }).then(function(){
+        var updates = {};
+        updates['elections/' + key + '/status'] = 'closed';
+        updates['elections/' + key + '/winner'] = $scope.winner;
+        firebase.database().ref().update(updates).then(function(){
+          $route.reload();
+        });
+      })
+
+
+    }
+
+    function getElections(){
+
+        var ref = firebase.database().ref('elections/');
+        ref.once("value").then(function(snapshot){
+          snapshot.forEach(function(election){
+            console.log(election.val());
+
+
+              var startDay = election.val().startDay;
+              var endDay = election.val().endDay;
+              var startMonth = election.val().startMonth;
+              var endMonth = election.val().endMonth;
+              var startYear = election.val().startYear;
+              var endYear = election.val().endYear;
+              var startDate = new Date(startYear, startMonth, startDay);
+              console.log(startDate - $scope.now);
+              var endDate = new Date(endYear, endMonth, endDay);
+              $scope.dates[election.key] = {'startDate':startDate,'endDate':endDate};
+              console.log($scope.dates);
+              $scope.elections[election.key] = election.val();
+              $scope.$apply();
+
+          });
+        });
+
+    }
+
+    getElections();
     getPrecincts();
     getStates();
     getRaces();

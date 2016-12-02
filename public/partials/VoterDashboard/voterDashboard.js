@@ -81,8 +81,29 @@ angular.module('tutorialWebApp.voterDashboard', ['ngRoute','firebase'])
       console.log($scope.hash);
       var ref = firebase.database().ref('voters/' + $scope.hash);
       ref.once("value").then(function(snapshot){
-        $scope.zipcode = snapshot.child('zipcode').val();
-        console.log($scope.zipcode);
+        if(snapshot.exists()){
+          $scope.zipcode = snapshot.child('zipcode').val();
+          console.log($scope.zipcode);
+          console.log("is voter");
+        }else{
+          var ref = firebase.database().ref('managers/' + $scope.hash);
+          ref.once("value").then(function(snapshot){
+            if(snapshot.exists()){
+              $scope.zipcode = snapshot.child('zipcode').val();
+              console.log($scope.zipcode);
+              console.log("is manager");
+            }else{
+              var ref = firebase.database().ref('admins/' + $scope.hash);
+              ref.once("value").then(function(snapshot){
+                if(snapshot.exists()){
+                  $scope.zipcode = snapshot.child('zipcode').val();
+                  console.log($scope.zipcode);
+                  console.log("is admin");
+                }
+              })
+            }
+          })
+        }
       }).then(function(){
         console.log("getData done");
         getElections();

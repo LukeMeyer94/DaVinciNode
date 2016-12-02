@@ -33,6 +33,21 @@
     <script src="https://cdn.firebase.com/libs/angularfire/1.2.0/angularfire.min.js"></script>
     <script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-2.2.0.js"></script>
     <script src="angular-md5/angular-md5.js"></script>
+    <script>
+
+      var socket = io.connect();
+
+    </script>
+        <script>
+        var config = {
+            apiKey: "AIzaSyCD7DbVChVXmOcz16guCkBOWQRY5Qjnv6E",
+            authDomain: "davincinode-5e249.firebaseapp.com",
+            databaseURL: "https://davincinode-5e249.firebaseio.com",
+            storageBucket: "davincinode-5e249.appspot.com",
+            messagingSenderId: "517875679155"
+        };
+        firebase.initializeApp(config);
+    </script>
 
 </head>
 <body ng-app="tutorialWebApp" style="background-color:#FFF;">
@@ -130,21 +145,7 @@
 
 
     <!-- Socket.IO setup -->
-    <script>
 
-      var socket = io.connect();
-
-    </script>
-        <script>
-        var config = {
-            apiKey: "AIzaSyCD7DbVChVXmOcz16guCkBOWQRY5Qjnv6E",
-            authDomain: "davincinode-5e249.firebaseapp.com",
-            databaseURL: "https://davincinode-5e249.firebaseio.com",
-            storageBucket: "davincinode-5e249.appspot.com",
-            messagingSenderId: "517875679155"
-        };
-        firebase.initializeApp(config);
-    </script>
 
     <!-- Our Website Javascripts -->
     <script src="js/main.js"></script>

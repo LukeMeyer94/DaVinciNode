@@ -9,8 +9,9 @@
     <h4>Score: {{election.candidate1}} - {{election.score1}} , {{election.candidate2}} - {{election.score2}}</h4>
     <p>Start Date: {{election.startMonth}}-{{election.startDay}}-{{election.startYear}}</p>
     <p>End Date: {{election.endMonth}}-{{election.endDay}}-{{election.endYear}}</p>
-    <button class="btn btn-block" ng-disabled="(dates[key].startDate - now) > 0" ng-show="election.status === 'open'" ng-click="startElection(key)">Start Election</button>
-    <button class="btn btn-block" ng-show="election.status === 'IP'" ng-click="endElection(key)">End Election</button>
+    <button class="btn btn-block" ng-disabled="(dates[key].startDate - now) > 0" ng-show="election.status === 'open' || isPaused[key]" ng-click="startElection(key)">Start Election</button>
+    <button class="btn btn-block" ng-show="!isPaused[key]" ng-click="pauseElection(key)">Pause Election</button>
+    <button class="btn btn-block" ng-show="false" ng-click="endElection(key)">End Election</button>
   </div>
   <h2>Closed elections:</h2><hr style="height:2px;border-color:#000;">
   <div class="row" ng-repeat="(key,election) in elections" ng-show="election.status === 'closed'" style="background-color: rgba(100,100,100,0.5);margin:20px;padding:20px;">

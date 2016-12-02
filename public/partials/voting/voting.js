@@ -30,6 +30,7 @@ angular.module('tutorialWebApp.voting', ['ngRoute','firebase'])
     $scope.choice = {
 
     }
+    $scope.showMessage = false;
 
     $scope.zipcodeAllowed = false;
     $scope.hasVoted = true;
@@ -48,17 +49,17 @@ angular.module('tutorialWebApp.voting', ['ngRoute','firebase'])
         updates['elections/' + $scope.url + '/score2'] = $scope.election.score2 + 1;
       }
       firebase.database().ref().update(updates);
-      
+
       var data = {
         id: $scope.user.voterID,
         selection: $scope.choice.candidate,
         election: $scope.election.Name
-        
+
       };
-      
+
       socket.emit('vote', data);
-      $location.url('/');
-      $route.reload();
+      $scope.showMessage = true;
+      $scope.$apply();
     };
 
 
@@ -169,7 +170,11 @@ angular.module('tutorialWebApp.voting', ['ngRoute','firebase'])
         $scope.election.status = snapshot.child('status').val();
         $scope.election.state = snapshot.child('state').val();
         $scope.election.precinct = snapshot.child('precinct').val();
-        $scope.election.hasVoted = snapshot.child('hasVoted').val();
+        if(snapshot.child('hasVoted').val() === 'voted'){
+          $scope.election.hasVoted = null;
+        }else{
+          $scope.election.hasVoted = snapshot.child('hasVoted').val();
+        }
         $scope.election.score1 = snapshot.child('score1').val();
         $scope.election.score2 = snapshot.child('score2').val();
         $scope.$apply();

@@ -29,6 +29,10 @@ angular.module('tutorialWebApp.managerDashboard', ['ngRoute','firebase'])
 
     }
 
+    $scope.isPaused = {
+
+    }
+
     $scope.now =  Date.now();
 
     firebase.auth().onAuthStateChanged(function(user){
@@ -43,11 +47,18 @@ angular.module('tutorialWebApp.managerDashboard', ['ngRoute','firebase'])
     $scope.startElection = function(key){
       console.log(key);
       var updates = {};
+      $scope.isPaused[key] = false;
       updates['elections/' + key + '/status'] = 'IP';
-      updates['elections/' + key + '/score1'] = 0;
-      updates['elections/' + key + '/score2'] = 0;
       var up = firebase.database().ref().update(updates);
       $route.reload();
+    }
+
+    $scope.pauseElection = function(key){
+      console.log(key);
+      var updates = {};
+      $scope.isPaused[key] = true;
+      updates['elections/' + key + '/status'] = 'paused';
+      var up = firebase.database().ref().update(updates);
     }
 
     $scope.endElection = function(key){
@@ -91,19 +102,19 @@ angular.module('tutorialWebApp.managerDashboard', ['ngRoute','firebase'])
           snapshot.forEach(function(election){
             console.log(election.val());
             if(election.precinct != null){
-              console.log("election precinct: " + election.precinct);
-              var startDay = election.startDay;
-              var endDay = election.endDay;
-              var startMonth = election.startMonth;
-              var endMonth = election.endMonth;
-              var startYear = election.startYear;
-              var endYear = election.endYear;
+              console.log("election precinct: " + election.val().precinct);
+              var startDay = election.val().startDay;
+              var endDay = election.val().endDay;
+              var startMonth = election.val().startMonth;
+              var endMonth = election.val().endMonth;
+              var startYear = election.val().startYear;
+              var endYear = election.val().endYear;
               var startDate = new Date(startYear, startMonth, startDay);
               console.log(startDate - $scope.now);
               var endDate = new Date(endYear, endMonth, endDay);
               $scope.dates[election.key] = {'startDate':startDate,'endDate':endDate};
               console.log($scope.dates);
-              $scope.elections[election.key] = election;
+              $scope.elections[election.key] = election.val();
               $scope.$apply();
             }
           });
@@ -172,12 +183,12 @@ angular.module('tutorialWebApp.managerDashboard', ['ngRoute','firebase'])
                   console.log($scope.precincts);
                   if(election.val().precinct in $scope.precincts){
                     console.log("election precinct: " + election.val().precinct);
-                    var startDay = election.startDay;
-                    var endDay = election.endDay;
-                    var startMonth = election.startMonth;
-                    var endMonth = election.endMonth;
-                    var startYear = election.startYear;
-                    var endYear = election.endYear;
+                    var startDay = election.val().startDay;
+                    var endDay = election.val().endDay;
+                    var startMonth = election.val().startMonth;
+                    var endMonth = election.val().endMonth;
+                    var startYear = election.val().startYear;
+                    var endYear = election.val().endYear;
                     var startDate = new Date(startYear, startMonth, startDay);
                     var endDate = new Date(endYear, endMonth, endDay);
                     console.log(startDate);

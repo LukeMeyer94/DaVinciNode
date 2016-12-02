@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" ng-show="!showMessage">
 
 
         <label>Enter Voter ID</label>
@@ -26,4 +26,7 @@
           <!-- TODO: add list of elections for specific user -->
           <button type="button" id="Votebutton" ng-click="vote()" class="btn btn-lg btn-primary btn-block">Submit Vote</button>
         </form>
+</div>
+<div class="container" ng-show="showMessage">
+  <h1 class="text-center">{{user.voterID}} voted for {{choice.candidate}} in election {{election.Name}}</h1>
 </div>

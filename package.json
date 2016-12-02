@@ -10,7 +10,8 @@
     "jquery": "^3.1.1",
     "nodemailer": "^2.6.0",
     "phantomjs-prebuilt": "^2.1.13",
-    "html-pdf": "^2.1.0"
+    "html-pdf": "^2.1.0",
+    "pdfkit": "^0.8.0"
   },
   "devDependencies": {
     "jasmine": "^2.5.2"
