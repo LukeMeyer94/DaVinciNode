@@ -6,6 +6,7 @@ var io = require('socket.io').listen(server);
 var path = require('path');
 var pdf = require('html-pdf');
 var fs = require('fs');
+var PDFDocument = require('pdfkit');
 
 var nodemailer = require('nodemailer');
 
@@ -37,17 +38,17 @@ function SendVID(vid, email) {
 
 function PrintPDF(vid, selection, election) {
     var html = "Vote by " + vid + " for " + selection;
-    var options = { format: 'Letter' };
     
     var dir = './pdfs/'+election+'/';
     if (!fs.existsSync(dir)){
         fs.mkdirSync(dir);
     }
     
-    pdf.create(html, options).toFile(dir+vid+'.pdf', function(err, res) {
-        if (err) return console.log(err);
-            console.log(res); 
-    });
+    var doc = new PDFDocument();
+    
+    doc.pipe(fs.createWriteStream(dir+vid+'.pdf'));
+    doc.text(html);
+    doc.end();
 }
 
 app.use(express.static(path.join(__dirname, 'public')));
