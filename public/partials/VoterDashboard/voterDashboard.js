@@ -25,7 +25,13 @@ angular.module('tutorialWebApp.voterDashboard', ['ngRoute','firebase'])
 
     $scope.vote = function(key){
       var updates = {};
-      updates['voters/' + $scope.hash + '/votes/' + key] = true;
+      if($scope.type === 'voter'){
+        updates['voters/' + $scope.hash + '/votes/' + key] = true;
+      }else if($scope.type === 'manager'){
+        updates['managers/' + $scope.hash + '/votes/' + key] = true;
+      }else if($scope.type === 'admin'){
+        updates['admins/' + $scope.hash + '/votes/' + key ] = true;
+      }
       console.log(updates);
       $location.url('/voting/' + key);
       $route.reload();
@@ -85,6 +91,8 @@ angular.module('tutorialWebApp.voterDashboard', ['ngRoute','firebase'])
           $scope.zipcode = snapshot.child('zipcode').val();
           console.log($scope.zipcode);
           console.log("is voter");
+          $scope.type = 'voter';
+          $scope.$apply();
         }else{
           var ref = firebase.database().ref('managers/' + $scope.hash);
           ref.once("value").then(function(snapshot){
@@ -92,6 +100,8 @@ angular.module('tutorialWebApp.voterDashboard', ['ngRoute','firebase'])
               $scope.zipcode = snapshot.child('zipcode').val();
               console.log($scope.zipcode);
               console.log("is manager");
+              $scope.type = 'manager';
+              $scope.$apply();
             }else{
               var ref = firebase.database().ref('admins/' + $scope.hash);
               ref.once("value").then(function(snapshot){
@@ -99,6 +109,8 @@ angular.module('tutorialWebApp.voterDashboard', ['ngRoute','firebase'])
                   $scope.zipcode = snapshot.child('zipcode').val();
                   console.log($scope.zipcode);
                   console.log("is admin");
+                  $scope.type = 'admin';
+                  $scope.$apply();
                 }
               })
             }
