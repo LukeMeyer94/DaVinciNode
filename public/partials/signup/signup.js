@@ -18,46 +18,40 @@ angular.module('tutorialWebApp.signup', ['ngRoute','firebase'])
 
     function registerUser(email, password, birthday, zipcode, ssn, licenseNumber,firstName,lastName){
         console.log("Register User function");
-        firebase.auth().createUserWithEmailAndPassword(email, password)
-            .catch(function(error){//this error checking should catch already exists type stuff
+        var success = true;
+
+            firebase.auth().createUserWithEmailAndPassword(email, password)
+            .catch(function(error){
                 var errorCode = error.code;
                 var errorMessage = error.message;
-                console.log("Error: " + errorMessage);//TODO: add something here to do a fancy pop up if error is thrown
+                console.log("Error1: " + errorMessage);//TODO: add something here to do a fancy pop up if error is thrown
+                $scope.available_email = false;
+                success = false;
                 return false;
-            })
-            .then(function(){
-                console.log("successfully authorized user");
+            }).then(function(){
+            
+             //console.log("successfully authorized user");
 
-                //sign in newly authorized user
-                firebase.auth().signInWithEmailAndPassword(email, password)
-                .then(function(){
-                         console.log("successfully signed in new user");
-                            email = email.toLowerCase();//firebase stores emails non-case-sensitive: this is so we can use auth().currentUser;
-                            var hash = md5.createHash(email);
-                            firebase.database().ref('voters/' + hash).set({
-                                firstName: firstName,
-                                lastName: lastName,
-                                email: email,
-                                birthday: birthday,
-                                zipcode: zipcode,
-                                ssn: ssn,
-                                licenseNumber: licenseNumber
-                            }).catch(function(error){
-                                 var errorcode = error.code;
-                                 var errorMessage = error.message;
-                                 console.log("Error: " + errorMessage);
-                                 return false;
-                            });
-                         });
-                         //numNP.once("value").then(function(snapshot){})
-
-
-                })
-                .catch(function(error){
-                    console.log("Error: " + error.message);
-                    return false;
+            //sign in newly authorized user
+            /*firebase.auth().signInWithEmailAndPassword(email, password)
+            console.log("successfully signed in new user");
+            */
+            if(success==true){
+                email = email.toLowerCase();//firebase stores emails non-case-sensitive: this is so we can use auth().currentUser;
+                var hash = md5.createHash(email);
+                firebase.database().ref('voters/' + hash).set({
+                    firstName: firstName,
+                    lastName: lastName,
+                    email: email,
+                    birthday: birthday,
+                    zipcode: zipcode,
+                    ssn: ssn,
+                    licenseNumber: licenseNumber
                 });
-                return true;
+                console.log("where i'm not supposed to be");
+            }});
+        
+        return success;
     }
     $scope.signUp = function(){
         var email = $scope.user.email;
@@ -79,7 +73,7 @@ angular.module('tutorialWebApp.signup', ['ngRoute','firebase'])
         console.log(lastName);
 
         var registered = registerUser(email, password, birthday, zipcode, ssn, licenseNumber,firstName,lastName);
-
+        console.log(registered);
         var genID = function(){
             var updates = {};
             var key = firebase.database().ref('voterIDs/').push().key;
@@ -88,8 +82,6 @@ angular.module('tutorialWebApp.signup', ['ngRoute','firebase'])
             firebase.database().ref().update(updates);
             return key;
         };
-
-
         if(registered){
             //var id = genID();
             var key = firebase.database().ref('voterIDs/').push().key;
@@ -98,7 +90,7 @@ angular.module('tutorialWebApp.signup', ['ngRoute','firebase'])
                 }).catch(function(error){
                   var errorcode = error.code;
                   var errorMessage = error.message;
-                  console.log("Error: " + errorMessage);
+                  console.log("Error3: " + errorMessage);
                 });
             var data = {
                 email: email,
@@ -108,7 +100,7 @@ angular.module('tutorialWebApp.signup', ['ngRoute','firebase'])
             socket.emit('send email', data);
 
             console.log("All successful");
-            $location.url('/');
+            //;$location.url('/');
         }else{
             console.log("failed");
         }

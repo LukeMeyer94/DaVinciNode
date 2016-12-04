@@ -12,21 +12,22 @@
             <label>Re-Enter Email</label>
             <input type="email" id = "email-re" name="email-re" class="form-control" ng-model="user.email2">
             <!--<p ng-show="">Enter a valid email.</p>-->
-            <p ng-show="regForm.email != regForm.email-re">Emails do not match</p>
+            <p ng-show="regForm.email != regForm.email-re" class="ng-hide">Emails do not match</p>
+            <p ng-show="available_email">This email Address is already used or is invalid</p>
         </div>
-
+        
         <div class="form-group">
             <label>Password</label>
             <input type="password" id="password" name="password" class="form-control" ng-model="user.password" ng-minlength = "8"><br/>
             <label>Re-Enter Password</label>
             <input type="password" id="password-re" name="password-re" class="form-control" ng-model="user.password2" ng-minlength = "8">
             <p ng-show="regForm.password.$error.minlength">Min password length is 8 characters.</p>
-            <p ng-show="regForm.password != regForm.password-re">Passwords do not match</p>
+            <p ng-show="regForm.password != regForm.password-re" class="ng-hide">Passwords do not match</p>
         </div>
 
         <div class="form-group">
             <label>Birthday</label>
-            <input id="birthday" name="birthday" class="form-control" ng-model="user.birthday">
+            <input type="date" id="birthday" name="birthday" class="form-control" ng-model="user.birthday">
         </div>
 
         <div class="form-group">
