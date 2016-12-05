@@ -16,6 +16,26 @@ angular.module('tutorialWebApp.signup', ['ngRoute','firebase'])
     // closing nav bar on any page change
     $('.navbar-collapse').removeClass('in');
 
+    $scope.months = {"January": [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31],
+                      "February":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28],
+                      "March":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31],
+                      "April": [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30],
+                      "May":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31],
+                      "June":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30],
+                      "July":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31],
+                      "August":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31],
+                      "September":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30],
+                      "October":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31],
+                      "November":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30],
+                      "December":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31]}
+    $scope.years = [];
+
+
+    var thisYear = new Date().getFullYear();
+    console.log(thisYear);
+    for(var i = 1940; i<=thisYear;i++){
+      $scope.years.push(i);
+    }
     function registerUser(email, password, birthday, zipcode, ssn, licenseNumber,firstName,lastName){
         console.log("Register User function");
         var success = true;
@@ -26,10 +46,11 @@ angular.module('tutorialWebApp.signup', ['ngRoute','firebase'])
                 var errorMessage = error.message;
                 console.log("Error1: " + errorMessage);//TODO: add something here to do a fancy pop up if error is thrown
                 $scope.available_email = false;
+                $scope.$apply();
                 success = false;
                 return false;
             }).then(function(){
-            
+
              //console.log("successfully authorized user");
 
             //sign in newly authorized user
@@ -50,7 +71,7 @@ angular.module('tutorialWebApp.signup', ['ngRoute','firebase'])
                 });
                 console.log("where i'm not supposed to be");
             }});
-        
+
         return success;
     }
     $scope.signUp = function(){
@@ -71,7 +92,7 @@ angular.module('tutorialWebApp.signup', ['ngRoute','firebase'])
         var lastName = $scope.user.lastName;
         console.log(firstName);
         console.log(lastName);
-
+        console.log($scope.user.birthday);
         var registered = registerUser(email, password, birthday, zipcode, ssn, licenseNumber,firstName,lastName);
         console.log(registered);
         var genID = function(){
