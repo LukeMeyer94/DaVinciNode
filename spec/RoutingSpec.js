@@ -1,13 +1,21 @@
 var request = require("request");
-// var application = require('../index.js');
+// var application = require('../index.js')
 var base_url = "http://localhost:3000/"
 
-describe("DaVinci Node Server", function() {
+describe("DaVinci Node Server Routing", function() {
+
   describe("GET /", function() {
     it("returns status code 200", function(done) {
       request.get(base_url, function(error, response, body) {
         console.log("/" + response.statusCode);
         expect(response.statusCode).toBe(200);
+        done();
+      });
+    });
+
+    it("renders the index.html file ", function(done){
+      request.get(base_url, function(error, response, body) {
+        expect(body.includes('id="indexPage"')).toBe(true);
         done();
       });
     });
