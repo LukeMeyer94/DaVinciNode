@@ -84,7 +84,7 @@ describe("DaVinci Node Server", function() {
       var url = base_url + "nothing";
       request.get(url, function(error, response, body) {
         console.log("bad page " + response.statusCode);
-        expect(response.statusCode).toBe(404);
+        expect(response.statusCode).toBe(405);
         done();
       });
     });

@@ -16,4 +16,4 @@ This is web application.
 Running tests
 =============
 1. npm install
-2. jasmine-node spec
+2. jasmine-node spec (append --verbose for full output)
