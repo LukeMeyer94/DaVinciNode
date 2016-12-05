@@ -38,14 +38,14 @@ function SendVID(vid, email) {
 
 function PrintPDF(vid, selection, election) {
     var html = "Vote by " + vid + " for " + selection;
-    
+
     var dir = './pdfs/'+election+'/';
     if (!fs.existsSync(dir)){
         fs.mkdirSync(dir);
     }
-    
+
     var doc = new PDFDocument();
-    
+
     doc.pipe(fs.createWriteStream(dir+vid+'.pdf'));
     doc.text(html);
     doc.end();
@@ -54,6 +54,7 @@ function PrintPDF(vid, selection, election) {
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', function(req, res){
+  // res.send("TEST");
   res.sendFile(__dirname + '/index.html');
 });
 
@@ -70,3 +71,7 @@ io.on('connection', function(socket){
 server.listen(process.env.PORT || 3000, function(){
   console.log('listening on '+(process.env.PORT || 3000));
 });
+
+exports.closeServer = function(){
+  server.close();
+};
